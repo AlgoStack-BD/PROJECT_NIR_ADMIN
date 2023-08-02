@@ -22,11 +22,17 @@ import { NavLink, Outlet, useLocation } from 'react-router-dom';
 // logo and images
 import nirLogo from '../../assets/img/nir_light.svg';
 import dashboardIcon from '../../assets/img/drawer/dashboard.svg';
+import dashboardIconWhite from '../../assets/img/drawer/dashboard-white.svg';
 import generalIcon from '../../assets/img/drawer/general.svg';
+import generalIconWhite from '../../assets/img/drawer/general-white.svg';
 import pendingIcon from '../../assets/img/drawer/pending-post.svg';
+import pendingIconWhite from '../../assets/img/drawer/pending-post-white.svg';
 import profileIcon from '../../assets/img/drawer/profile.svg';
+import profileIconWhite from '../../assets/img/drawer/profile-white.svg';
 import revenueIcon from '../../assets/img/drawer/revenue.svg';
+import revenueIconWhite from '../../assets/img/drawer/revenue-white.svg';
 import usersIcon from '../../assets/img/drawer/users.svg';
+import usersIconWhite from '../../assets/img/drawer/users-white.svg';
 
 const drawerWidth = 240;
 
@@ -95,37 +101,6 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
     }),
 );
 
-function CustomList({ icon, text, link }) {
-    return (
-        <ListItem key={1} disablePadding sx={{ display: 'flex', justifyContent: 'flex-start' }}>
-            <NavLink
-                to={`/dashboard/${link}`}
-                style={({ isActive }) => {
-                    return {
-                        color: isActive ? "green" : "inherit",
-                        textDecoration: "none",
-                        width: "100%",
-                        borderBottom: isActive ? "1px solid #E5E5E5" : "none",
-                    };
-                }}
-
-            >
-                <ListItemButton
-                    sx={{
-                        minHeight: 48,
-                        justifyContent: open ? 'initial' : 'center',
-                        px: 3,
-                    }}
-                >
-                    <img src={icon} alt="icon" style={{ marginRight: '25px', width: '20px' }} />
-                    <ListItemText sx={{ opacity: open ? 1 : 0 }} > {text} </ListItemText>
-                </ListItemButton>
-            </NavLink>
-
-        </ListItem>
-
-    )
-}
 
 export default function MiniDrawer() {
     const theme = useTheme();
@@ -133,6 +108,52 @@ export default function MiniDrawer() {
     const location = useLocation();
     // console.log(location.pathname)
     const pathText = location.pathname.split('/')[2].toUpperCase();
+    const [headerPath, setHeaderPath] = React.useState(pathText);
+
+
+    function CustomList({ icon, whiteIcon, text, link, pathText }) {
+
+        // remove spaces and convert to lowercase then check for the path is active
+        const cleanedPathText = pathText.toLowerCase().replace(/\s/g, '');
+        const cleanedText = text.toLowerCase().replace(/\s/g, '');
+        const isActive = cleanedPathText === cleanedText;
+        return (
+            <ListItem key={1} disablePadding sx={{ display: 'flex', justifyContent: 'flex-start' }}>
+                <NavLink
+                    to={`/dashboard/${link}`}
+                    style={({ isActive }) => {
+                        return {
+                            color: isActive ? "white" : "inherit",
+                            textDecoration: "none",
+                            width: "100%",
+                            borderBottom: isActive ? "1px solid #E5E5E5" : "none",
+                            backgroundColor: isActive ? "#0D55DF" : "#fff",
+                            borderRadius: "0 5px 5px 0",
+                        };
+                    }}
+                    onClick={() => setHeaderPath(text)}
+                >
+                    <ListItemButton
+                        sx={{
+                            minHeight: 48,
+                            justifyContent: open ? 'initial' : 'center',
+                            px: 3,
+                        }}
+                    >
+
+                        {isActive ?
+                            <img src={whiteIcon} alt="icon" style={{ marginRight: '25px', width: '20px' }} /> :
+                            <img src={icon} alt="icon" style={{ marginRight: '25px', width: '20px' }} />
+                        }
+
+                        <ListItemText sx={{ opacity: open ? 1 : 0 }} > {text} </ListItemText>
+                    </ListItemButton>
+                </NavLink>
+
+            </ListItem>
+
+        )
+    }
 
     const toggleDrawer = () => {
         setOpen(!open);
@@ -155,7 +176,7 @@ export default function MiniDrawer() {
                     {/* show route path here */}
                     <Box sx={{ display: 'flex', width: "100%", justifyContent: 'space-between', color: "#000" }}>
                         <Typography variant="h6" noWrap sx={{ display: 'flex', alignItems: 'center' }}>
-                            {pathText}
+                            {headerPath.toUpperCase()}
                         </Typography>
                         {
                             open &&
@@ -178,13 +199,12 @@ export default function MiniDrawer() {
                 </DrawerHeader>
                 {/* here is icon and text for sidebar */}
                 <List>
-                    <CustomList icon={generalIcon} text="Home" link="home" />
-                    <CustomList icon={dashboardIcon} text="Dashboard" link="dashboard" />
-                    <CustomList icon={profileIcon} text="Profile" link="profile"/>
-                    <CustomList icon={usersIcon} text="Users" link="users" />
-                    <CustomList icon={pendingIcon} text="Pending Post" link="pendingPost" />
-                    <CustomList icon={revenueIcon} text="Total Revenue" link="totalRevenue" />
-
+                    <CustomList icon={generalIcon} whiteIcon={generalIconWhite} text="Home" link="home" pathText={pathText} />
+                    <CustomList icon={dashboardIcon} whiteIcon={dashboardIconWhite} text="Dashboard" link="dashboard" pathText={pathText} />
+                    <CustomList icon={profileIcon} whiteIcon={profileIconWhite} text="Profile" link="profile" pathText={pathText} />
+                    <CustomList icon={usersIcon} whiteIcon={usersIconWhite} text="Users" link="users" pathText={pathText} />
+                    <CustomList icon={pendingIcon} whiteIcon={pendingIconWhite} text="Pending Post" link="pendingPost" pathText={pathText} />
+                    <CustomList icon={revenueIcon} whiteIcon={revenueIconWhite} text="Total Revenue" link="totalRevenue" pathText={pathText} />
                 </List>
             </Drawer>
             <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
