@@ -118,7 +118,7 @@ export default function MiniDrawer() {
         const cleanedText = text.toLowerCase().replace(/\s/g, '');
         const isActive = cleanedPathText === cleanedText;
         return (
-            <ListItem key={1} disablePadding sx={{ display: 'flex', justifyContent: 'flex-start' }}>
+            <ListItem key={1} disablePadding sx={{ display: 'flex', justifyContent: 'flex-start'}}>
                 <NavLink
                     to={`/dashboard/${link}`}
                     style={({ isActive }) => {
@@ -137,7 +137,7 @@ export default function MiniDrawer() {
                         sx={{
                             minHeight: 48,
                             justifyContent: open ? 'initial' : 'center',
-                            px: 3,
+                            pl: 4,
                         }}
                     >
 
@@ -198,7 +198,7 @@ export default function MiniDrawer() {
                     }
                 </DrawerHeader>
                 {/* here is icon and text for sidebar */}
-                <List>
+                <List style={{ marginTop: '-7px' }}>
                     <CustomList icon={generalIcon} whiteIcon={generalIconWhite} text="Home" link="home" pathText={pathText} />
                     <CustomList icon={dashboardIcon} whiteIcon={dashboardIconWhite} text="Dashboard" link="dashboard" pathText={pathText} />
                     <CustomList icon={profileIcon} whiteIcon={profileIconWhite} text="Profile" link="profile" pathText={pathText} />
