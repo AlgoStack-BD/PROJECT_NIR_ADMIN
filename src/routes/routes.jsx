@@ -3,6 +3,11 @@ import { createBrowserRouter } from 'react-router-dom';
 import Login from '../layout/Login/Login';
 import Dashboard from '../layout/Dashboard/Dashboard';
 import Homepage from '../pages/Homepage/Homepage';
+import DashboardPage from '../pages/Dashboard/DashboardPage';
+import Users from '../pages/Users/Users';
+import PendingPost from '../pages/PendingPost/PendingPost';
+import TotalRevenue from '../pages/TotalRevenue/TotalRevenue';
+import Profile from '../pages/Profile/Profile';
 // import ProtectedRoute from './ProtectedRoute';
 
 const routes = createBrowserRouter([
@@ -29,6 +34,26 @@ const routes = createBrowserRouter([
             {
                 path: 'home',
                 element: <Homepage />,
+            },
+            {
+                path: 'dashboard',
+                element: <DashboardPage />,
+            },
+            {
+                path: 'profile',
+                element: <Profile />,
+            },
+            {
+                path: 'users',
+                element: <Users />,
+            },
+            {
+                path: 'pendingPost',
+                element: <PendingPost />,
+            },
+            {
+                path: 'totalRevenue',
+                element: <TotalRevenue />,
             },
         ],
     },

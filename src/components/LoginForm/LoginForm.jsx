@@ -33,7 +33,7 @@ const LoginForm = () => {
             } else {
                 localStorage.setItem('jwt', response.data.jwt)
                 if (response.data.data.isAdmin === true) {
-                    navigate('/dashboard')
+                    navigate('/dashboard/home')
                 } else {
                     setError('Warning: Illegal Access Detected')
                 }

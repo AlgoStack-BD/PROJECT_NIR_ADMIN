@@ -18,7 +18,15 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
-import { Outlet } from 'react-router-dom';
+import { NavLink, Outlet, useLocation } from 'react-router-dom';
+// logo and images
+import nirLogo from '../../assets/img/nir_light.svg';
+import dashboardIcon from '../../assets/img/drawer/dashboard.svg';
+import generalIcon from '../../assets/img/drawer/general.svg';
+import pendingIcon from '../../assets/img/drawer/pending-post.svg';
+import profileIcon from '../../assets/img/drawer/profile.svg';
+import revenueIcon from '../../assets/img/drawer/revenue.svg';
+import usersIcon from '../../assets/img/drawer/users.svg';
 
 const drawerWidth = 240;
 
@@ -87,70 +95,96 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
     }),
 );
 
+function CustomList({ icon, text, link }) {
+    return (
+        <ListItem key={1} disablePadding sx={{ display: 'flex', justifyContent: 'flex-start' }}>
+            <NavLink
+                to={`/dashboard/${link}`}
+                style={({ isActive }) => {
+                    return {
+                        color: isActive ? "green" : "inherit",
+                        textDecoration: "none",
+                        width: "100%",
+                        borderBottom: isActive ? "1px solid #E5E5E5" : "none",
+                    };
+                }}
+
+            >
+                <ListItemButton
+                    sx={{
+                        minHeight: 48,
+                        justifyContent: open ? 'initial' : 'center',
+                        px: 3,
+                    }}
+                >
+                    <img src={icon} alt="icon" style={{ marginRight: '25px', width: '20px' }} />
+                    <ListItemText sx={{ opacity: open ? 1 : 0 }} > {text} </ListItemText>
+                </ListItemButton>
+            </NavLink>
+
+        </ListItem>
+
+    )
+}
+
 export default function MiniDrawer() {
     const theme = useTheme();
     const [open, setOpen] = React.useState(true);
+    const location = useLocation();
+    // console.log(location.pathname)
+    const pathText = location.pathname.split('/')[2].toUpperCase();
 
-    const handleDrawerOpen = () => {
-        setOpen(true);
-    };
-
-    const handleDrawerClose = () => {
-        setOpen(false);
-    };
     const toggleDrawer = () => {
-        setOpen(!open); 
+        setOpen(!open);
     };
+
     return (
         <Box sx={{ display: 'flex' }}>
             {/* <CssBaseline /> */}
-            {/* <AppBar position="fixed" open={open}>
-                <Toolbar>
-                    <IconButton
-                        color="inherit"
-                        aria-label="open drawer"
-                        onClick={handleDrawerOpen}
-                        edge="start"
-                        sx={{
-                            marginRight: 5,
-                            ...(open && { display: 'none' }),
-                        }}
-                    >
-                        <MenuIcon />
-                    </IconButton>
-
-                </Toolbar>
-            </AppBar> */}
-            <Drawer variant="permanent" open={open}>
-                <DrawerHeader>
+            <AppBar position="fixed" open={open} style={{
+                background: '#fff',
+                boxShadow: 'none',
+                borderBottom: '1px solid #e0e0e0'
+            }}>
+                <Toolbar >
                     <IconButton onClick={toggleDrawer}>
-                        {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+                        {
+                            open ? <ChevronLeftIcon /> : <MenuIcon />
+                        }
                     </IconButton>
+                    {/* show route path here */}
+                    <Box sx={{ display: 'flex', width: "100%", justifyContent: 'space-between', color: "#000" }}>
+                        <Typography variant="h6" noWrap sx={{ display: 'flex', alignItems: 'center' }}>
+                            {pathText}
+                        </Typography>
+                        {
+                            open &&
+                            <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                                <img src={nirLogo} alt="avater" style={{ height: '30px', width: '30px', borderRadius: '50%' }} />
+                                <Typography variant="h6" noWrap component="div" sx={{ fontWeight: 600, ml: 1 }}>
+                                    Mahinur Rahman
+                                </Typography>
+                            </Box>
+                        }
+
+                    </Box>
+                </Toolbar>
+            </AppBar>
+            <Drawer variant="permanent" open={open} style={{ background: '#000' }}>
+                <DrawerHeader>
+                    {
+                        open && <img src={nirLogo} alt="NIR Logo" style={{ width: '100%', height: '50px', marginRight: '40px' }} />
+                    }
                 </DrawerHeader>
-                <Divider />
+                {/* here is icon and text for sidebar */}
                 <List>
-                    {['All mail', 'Trash', 'Spam'].map((text, index) => (
-                        <ListItem key={text} disablePadding sx={{ display: 'block' }}>
-                            <ListItemButton
-                                sx={{
-                                    minHeight: 48,
-                                    justifyContent: open ? 'initial' : 'center',
-                                    px: 2.5,
-                                }}
-                            >
-                                <ListItemIcon
-                                    sx={{
-                                        minWidth: 0,
-                                        mr: open ? 3 : 'auto',
-                                        justifyContent: 'center',
-                                    }}
-                                >
-                                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                                </ListItemIcon>
-                                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
-                            </ListItemButton>
-                        </ListItem>
-                    ))}
+                    <CustomList icon={generalIcon} text="Home" link="home" />
+                    <CustomList icon={dashboardIcon} text="Dashboard" link="dashboard" />
+                    <CustomList icon={profileIcon} text="Profile" link="profile"/>
+                    <CustomList icon={usersIcon} text="Users" link="users" />
+                    <CustomList icon={pendingIcon} text="Pending Post" link="pendingPost" />
+                    <CustomList icon={revenueIcon} text="Total Revenue" link="totalRevenue" />
+
                 </List>
             </Drawer>
             <Box component="main" sx={{ flexGrow: 1, p: 3 }}>

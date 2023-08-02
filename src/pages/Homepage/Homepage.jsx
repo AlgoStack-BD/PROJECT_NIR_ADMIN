@@ -2,9 +2,7 @@ import React from 'react'
 
 const Homepage = () => {
   return (
-    <div style={{
-        backgroundColor: 'blue',
-    }}>Homepage asdasd as d</div>
+    <div>Homepage</div>
   )
 }
 
