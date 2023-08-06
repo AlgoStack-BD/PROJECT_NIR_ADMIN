@@ -5,6 +5,7 @@ import { RouterProvider } from 'react-router-dom'
 import routes from './routes/routes'
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
+import AuthProvider from './provider/AuthProvider'
 
 function App() {
   const darkTheme = createTheme({
@@ -14,10 +15,12 @@ function App() {
   });
 
   return (
-    <ThemeProvider theme={darkTheme}>
-      <CssBaseline />
-      <RouterProvider router={routes} />
-    </ThemeProvider>
+    <AuthProvider>
+      <ThemeProvider theme={darkTheme}>
+        <CssBaseline />
+        <RouterProvider router={routes} />
+      </ThemeProvider>
+    </AuthProvider>
 
   )
 }

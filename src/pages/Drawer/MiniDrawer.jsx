@@ -33,6 +33,8 @@ import revenueIcon from '../../assets/img/drawer/revenue.svg';
 import revenueIconWhite from '../../assets/img/drawer/revenue-white.svg';
 import usersIcon from '../../assets/img/drawer/users.svg';
 import usersIconWhite from '../../assets/img/drawer/users-white.svg';
+import { AuthContext } from '../../provider/AuthProvider';
+import { VerticalAlignBottom } from '@mui/icons-material';
 
 const drawerWidth = 240;
 
@@ -103,8 +105,11 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 
 export default function MiniDrawer() {
+    const { logout, user} = React.useContext(AuthContext)
+    console.log(user)
+
     const theme = useTheme();
-    const [open, setOpen] = React.useState(true);
+    const [open, setOpen] = React.useState(false);
     const location = useLocation();
     // console.log(location.pathname)
     const pathText = location.pathname.split('/')[2].toUpperCase();
@@ -117,8 +122,10 @@ export default function MiniDrawer() {
         const cleanedPathText = pathText.toLowerCase().replace(/\s/g, '');
         const cleanedText = text.toLowerCase().replace(/\s/g, '');
         const isActive = cleanedPathText === cleanedText;
+
+
         return (
-            <ListItem key={1} disablePadding sx={{ display: 'flex', justifyContent: 'flex-start'}}>
+            <ListItem key={1} disablePadding sx={{ display: 'flex', justifyContent: 'flex-start' }}>
                 <NavLink
                     to={`/dashboard/${link}`}
                     style={({ isActive }) => {
@@ -183,7 +190,12 @@ export default function MiniDrawer() {
                             <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                                 <img src={nirLogo} alt="avater" style={{ height: '30px', width: '30px', borderRadius: '50%' }} />
                                 <Typography variant="h6" noWrap component="div" sx={{ fontWeight: 600, ml: 1 }}>
-                                    Mahinur Rahman
+                                    {user.name}                                    
+                                    <button onClick={()=> {
+                                        logout()
+                                    }}>
+                                        logout
+                                    </button>
                                 </Typography>
                             </Box>
                         }

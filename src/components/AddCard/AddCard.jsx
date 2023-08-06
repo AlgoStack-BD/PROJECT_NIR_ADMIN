@@ -10,7 +10,7 @@ const AddCard = ({ text }) => {
     return (
         <div className={styles.card} onClick={handleClick}>
             <img src={addIcon} alt="add-icon" />
-            Add {text}
+            <p style={{textAlign: 'center', marginTop:'10px'}}>Add {text}</p>
         </div>
     )
 }

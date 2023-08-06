@@ -11,8 +11,8 @@ const Homepage = () => {
       <AddCard text="admin" />
       {/* admins post */}
       <h2 className={styles.heading}>Admin’s POST</h2>
-      <Box sx={{width: '100%', display: 'flex', gap: '20px'}}>
-        <AddCard text="rent house" />
+      <Box sx={{width: '100%', display: 'flex', gap: '20px', flexDirection: {xs: 'column', md: 'row'}, alignItems: { xs: 'center', md: 'flex-start' }}}>
+        <AddCard text="house rent" />
         <AddCard text="advertising" />
       </Box>
     </Box>

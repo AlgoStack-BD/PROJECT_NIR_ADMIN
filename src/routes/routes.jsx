@@ -8,6 +8,7 @@ import Users from '../pages/Users/Users';
 import PendingPost from '../pages/PendingPost/PendingPost';
 import TotalRevenue from '../pages/TotalRevenue/TotalRevenue';
 import Profile from '../pages/Profile/Profile';
+import PrivateRoute from './PrivateRoute';
 // import ProtectedRoute from './ProtectedRoute';
 
 const routes = createBrowserRouter([
@@ -27,9 +28,7 @@ const routes = createBrowserRouter([
     },
     {
         path: '/dashboard',
-        element: (
-            <Dashboard />
-        ),
+        element: <PrivateRoute> <Dashboard /> </PrivateRoute>,
         children: [
             {
                 path: 'home',
