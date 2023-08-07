@@ -34,7 +34,7 @@ import revenueIconWhite from '../../assets/img/drawer/revenue-white.svg';
 import usersIcon from '../../assets/img/drawer/users.svg';
 import usersIconWhite from '../../assets/img/drawer/users-white.svg';
 import { AuthContext } from '../../provider/AuthProvider';
-import { VerticalAlignBottom } from '@mui/icons-material';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 const drawerWidth = 240;
 
@@ -105,7 +105,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 
 export default function MiniDrawer() {
-    const { logout, user} = React.useContext(AuthContext)
+    const { logout, user } = React.useContext(AuthContext)
     console.log(user)
 
     const theme = useTheme();
@@ -185,25 +185,17 @@ export default function MiniDrawer() {
                         <Typography variant="h6" noWrap sx={{ display: 'flex', alignItems: 'center' }}>
                             {headerPath.toUpperCase()}
                         </Typography>
-                        {
-                            open &&
-                            <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                                <img src={nirLogo} alt="avater" style={{ height: '30px', width: '30px', borderRadius: '50%' }} />
-                                <Typography variant="h6" noWrap component="div" sx={{ fontWeight: 600, ml: 1 }}>
-                                    {user.name}                                    
-                                    <button onClick={()=> {
-                                        logout()
-                                    }}>
-                                        logout
-                                    </button>
-                                </Typography>
-                            </Box>
-                        }
+                        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                            {/* <img src={nirLogo} alt="avater" style={{ height: '30px', width: '30px', borderRadius: '50%' }} /> */}
+                            <Typography variant="h6" noWrap component="div" sx={{ fontWeight: 600, ml: 1 }}>
+                                {user.name}
+                            </Typography>
+                        </Box>
 
                     </Box>
                 </Toolbar>
             </AppBar>
-            <Drawer variant="permanent" open={open} style={{ background: '#000' }}>
+            <Drawer variant="permanent" open={open} style={{ background: '#000', position: 'relative' }}>
                 <DrawerHeader>
                     {
                         open && <img src={nirLogo} alt="NIR Logo" style={{ width: '100%', height: '50px', marginRight: '40px' }} />
@@ -217,6 +209,27 @@ export default function MiniDrawer() {
                     <CustomList icon={usersIcon} whiteIcon={usersIconWhite} text="Users" link="users" pathText={pathText} />
                     <CustomList icon={pendingIcon} whiteIcon={pendingIconWhite} text="Pending Post" link="pendingPost" pathText={pathText} />
                     <CustomList icon={revenueIcon} whiteIcon={revenueIconWhite} text="Total Revenue" link="totalRevenue" pathText={pathText} />
+                </List>
+                {/* logout button */}
+                <List sx={{ position: 'absolute', bottom: 0, left: 10, width: '100%' }}>
+                    <Divider />
+                    <ListItemButton
+                        sx={{
+                            minHeight: 48,
+                            justifyContent: open ? 'initial' : 'center',
+                            pl: 4,
+                            width: '100%',
+                        }}
+                        onClick={() => {
+                            logout()
+                        }}
+                    >
+                        <ListItemIcon>
+                            <LogoutIcon />
+                        </ListItemIcon>
+                        <ListItemText > Logout </ListItemText>
+
+                    </ListItemButton>
                 </List>
             </Drawer>
             <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
