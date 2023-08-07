@@ -5,9 +5,11 @@ export const AuthContext = React.createContext(null);
 
 const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
+    const [showForm, setShowForm] = useState('');
     const [loading, setLoading] = useState(true);
     const [token, setToken] = useState(localStorage.getItem('jwt') || '');
     const [userId, setUserId] = useState(localStorage.getItem('userId') || '');
+
     useEffect(() => {
         if (token && userId) {
             fetchUserData(token, userId);
@@ -67,11 +69,18 @@ const AuthProvider = ({ children }) => {
         setUser(null);
     };
 
+
+    const handleForm = (text) => {
+        setShowForm(text)
+    }   
+
     const authInfo = {
         user,
         loading,
         login,
         logout,
+        handleForm,
+        showForm
     };
 
     return (
