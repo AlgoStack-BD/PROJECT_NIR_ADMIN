@@ -5,10 +5,8 @@ import FormCard from '../FormCard/FormCard'
 import { AuthContext } from '../../provider/AuthProvider'
 
 const AddCard = ({ text }) => {
-    const { handleForm } = useContext(AuthContext)
-    // console.log(handleForm(text))
+    const { handleForm, showForm } = useContext(AuthContext)
     const handleClick = () => {
-        console.log('clicked', text)
         handleForm(text)
     }
 
@@ -16,7 +14,6 @@ const AddCard = ({ text }) => {
         <div className={styles.card} onClick={handleClick}>
             <img src={addIcon} alt="add-icon" />
             <p style={{textAlign: 'center', marginTop:'10px'}}>Add {text}</p>
-            {/* <DialogBox text={text} /> */}
         </div>
     )
 }
