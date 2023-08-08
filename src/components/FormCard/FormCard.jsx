@@ -1,6 +1,7 @@
 import React, { useContext } from 'react'
 import MakeAdmin from './MakeAdmin'
 import { AuthContext } from '../../provider/AuthProvider'
+import HouseRentForm from './HouseRent/HouseRentForm'
 
 const FormCard = ({ text }) => {
   const { handleForm } = useContext(AuthContext)
@@ -14,11 +15,14 @@ const FormCard = ({ text }) => {
       }
       {
         text == 'house rent' &&
-        <h1>house rent</h1>
+        <HouseRentForm />
       }
       {
         text == 'advertising' &&
-        <h1>ASD</h1>
+        <div style={{display: 'flex', justifyContent:"center", alignItems: "center", flexDirection: 'column'}}>
+          <HouseRentForm />
+          <p style={{padding: '0 20px'}}>Will make some changes internally to make it work for advertising</p>
+        </div>
       }
     </div>
   )

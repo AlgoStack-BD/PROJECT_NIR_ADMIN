@@ -9,7 +9,7 @@ const AddCard = ({ text }) => {
     const handleClick = () => {
         handleForm(text)
     }
-
+    
     return (
         <div className={styles.card} onClick={handleClick}>
             <img src={addIcon} alt="add-icon" />
