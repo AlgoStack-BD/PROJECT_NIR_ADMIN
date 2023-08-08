@@ -175,14 +175,14 @@ export default function MiniDrawer() {
                 borderBottom: '1px solid #e0e0e0'
             }}>
                 <Toolbar >
-                    <IconButton onClick={toggleDrawer}>
+                    <IconButton onClick={toggleDrawer} >
                         {
                             open ? <ChevronLeftIcon /> : <MenuIcon />
                         }
                     </IconButton>
                     {/* show route path here */}
                     <Box sx={{ display: 'flex', width: "100%", justifyContent: 'space-between', color: "#000" }}>
-                        <Typography variant="h6" noWrap sx={{ display: 'flex', alignItems: 'center' }}>
+                        <Typography variant="h6" noWrap sx={{ display: 'flex', alignItems: 'center', ml:2 }}>
                             {headerPath.toUpperCase()}
                         </Typography>
                         <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
@@ -204,8 +204,8 @@ export default function MiniDrawer() {
                 {/* here is icon and text for sidebar */}
                 <List style={{ marginTop: '-7px' }}>
                     <CustomList icon={generalIcon} whiteIcon={generalIconWhite} text="Home" link="home" pathText={pathText} />
-                    <CustomList icon={dashboardIcon} whiteIcon={dashboardIconWhite} text="Dashboard" link="dashboard" pathText={pathText} />
                     <CustomList icon={profileIcon} whiteIcon={profileIconWhite} text="Profile" link="profile" pathText={pathText} />
+                    <CustomList icon={dashboardIcon} whiteIcon={dashboardIconWhite} text="Dashboard" link="dashboard" pathText={pathText} />
                     <CustomList icon={usersIcon} whiteIcon={usersIconWhite} text="Users" link="users" pathText={pathText} />
                     <CustomList icon={pendingIcon} whiteIcon={pendingIconWhite} text="Pending Post" link="pendingPost" pathText={pathText} />
                     <CustomList icon={revenueIcon} whiteIcon={revenueIconWhite} text="Total Revenue" link="totalRevenue" pathText={pathText} />
@@ -232,7 +232,7 @@ export default function MiniDrawer() {
                     </ListItemButton>
                 </List>
             </Drawer>
-            <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+            <Box component="main" sx={{ flexGrow: 1 }}>
                 <DrawerHeader />
                 <Outlet />
             </Box>
