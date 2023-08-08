@@ -2,6 +2,7 @@ import { Box, Grid } from '@mui/material'
 import React from 'react'
 import imageGrp from '../../assets/img/profile/imageGrp.svg'
 import ProfileForm from '../../components/Profile/ProfileForm'
+import ProfileData from '../../components/Profile/ProfileData'
 
 const Profile = () => {
   return (
@@ -17,8 +18,8 @@ const Profile = () => {
         <Grid item xs={12} md={5} style={{display: 'flex', justifyContent: 'center'}}>
           <ProfileForm />
         </Grid>
-        <Grid item xs={12} md={7} style={{background: '#999'}}>
-          asdas
+        <Grid item xs={12} md={7}>
+            <ProfileData />
         </Grid>
       </Grid>
     </Box>
