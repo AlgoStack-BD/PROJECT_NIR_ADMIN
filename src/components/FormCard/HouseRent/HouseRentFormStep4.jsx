@@ -8,7 +8,7 @@ const HouseRentFormStep4 = ({ formData, onSubmit }) => {
     const [isPublicNumber, setIsPublicNumber] = useState(formData.isPublicNumber);
     // const [isSold, setIsSold] = useState(formData.isSold);
     const [hasError, setHasError] = useState(false);
-
+    const [userImg, setUserImg] = useState('');
     const handleSubmission = async () => {
 
         if (
@@ -33,6 +33,9 @@ const HouseRentFormStep4 = ({ formData, onSubmit }) => {
             data: {
                 userId: localStorage.getItem('userId'),
                 location: formData.location,
+                userName: formData.userName,
+                phone: '01778287079',
+                userImg: userImg,
                 type: formData.type,
                 isNegotiable: formData.isNegotiable,
                 bedRoom: formData.bedRoom,
@@ -86,9 +89,16 @@ const HouseRentFormStep4 = ({ formData, onSubmit }) => {
                 fullWidth
                 margin="normal"
             />
+            <TextField
+                label="Image"
+                value={userImg}
+                onChange={(e) => setUserImg(e.target.value)}
+                fullWidth
+                margin="normal"
+            />
             <FormControlLabel
                 control={<Checkbox checked={isPublicNumber} onChange={(e) => setIsPublicNumber(e.target.checked)} />}
-                label="Public Phone Number"
+                label="Make Public Number"
             />
             {/* <FormControlLabel
                 control={<Checkbox checked={isSold} onChange={(e) => setIsSold(e.target.checked)} />}

@@ -3,6 +3,7 @@ import { TextField, Select, MenuItem, FormControl, InputLabel, Button, FormContr
 
 const HouseRentFormStep1 = ({ formData, onNext }) => {
     const [location, setLocation] = useState(formData.location || '');
+    const [userName, setUserName] = useState(formData.userName || '');
     const [type, setType] = useState(formData.type || []);
     const [isNegotiable, setIsNegotiable] = useState(formData.isNegotiable || false);
     const [bedRoom, setBedRoom] = useState(formData.bedRoom);
@@ -11,6 +12,7 @@ const HouseRentFormStep1 = ({ formData, onNext }) => {
     const handleNext = () => {
         onNext({
             location,
+            userName,
             type,
             isNegotiable,
             bedRoom,
@@ -27,6 +29,13 @@ const HouseRentFormStep1 = ({ formData, onNext }) => {
                 onChange={(e) => setLocation(e.target.value)}
                 fullWidth
                 margin="normal"
+            />
+            <TextField
+                required
+                label="Name"
+                value={userName}
+                onChange={(e) => setUserName(e.target.value)}
+                fullWidth
             />
             <FormControl fullWidth margin="normal" required>
                 <Select
@@ -55,7 +64,6 @@ const HouseRentFormStep1 = ({ formData, onNext }) => {
                 value={bedRoom}
                 onChange={(e) => setBedRoom(e.target.value)}
                 fullWidth
-                margin="normal"
             />
             <TextField
                 required
