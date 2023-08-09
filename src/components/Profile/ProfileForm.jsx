@@ -32,7 +32,7 @@ const ProfileForm = () => {
         <img src={profilePic} alt="profile-image" />
         <img src={addButton} alt="add-button-image" className={styles.addButton} />
       </div>
-      <Typography variant="h5" className={styles.formTitle}>Mahinur Rahman</Typography>
+      <p variant="h5" className={styles.formTitle}>Mahinur Rahman</p>
       <FormData text="Rent request applied" amount="8" />
       <FormData text="Total approved request" amount="8" />
       <FormData text="Pending post" amount="4" />
