@@ -31,6 +31,7 @@ const ProfileForm = () => {
       <div className={styles.formImage}>
         <img src={profilePic} alt="profile-image" />
         <img src={addButton} alt="add-button-image" className={styles.addButton} />
+        {/* search user here */}
       </div>
       <p variant="h5" className={styles.formTitle}>Mahinur Rahman</p>
       <FormData text="Rent request applied" amount="8" />
