@@ -10,18 +10,22 @@ const LoginForm = () => {
     const handleLogin = async (e) => {
         setError(null);
         e.preventDefault();
-        // check if email has @ and ends with .com
-        const emailRegex = /\S+@\S+\.\S+/;
-        if (!emailRegex.test(e.target.email.value)) {   
-            setError('Please enter a valid email');
-            return;
-        }
+
         // check if password is at least 6 characters long
         if (e.target.password.value.length < 6) {
+            // console.log('Regex detected short password')
             setError('Password must be at least 6 characters long');
             return;
         }
-        
+
+        // check if email has @ and ends with .com
+        const emailRegex = /\S+@\S+\.\S+/;
+        if (!emailRegex.test(e.target.email.value)) {
+            console.log('Regex detected fake mail')
+            setError('Please enter a valid email');
+            return;
+        }
+
         if (e.target.email.value === '' || e.target.password.value === '') {
             setError('Please fill in the form');
             return;

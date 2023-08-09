@@ -20,7 +20,7 @@ const AuthProvider = ({ children }) => {
 
     const fetchUserData = async (token, userId) => {
         try {
-            const response = await axios.get(`https://project-nir-backend.vercel.app/single-user/${userId}`, {
+            const response = await axios.get(`http://localhost:5000/single-user/${userId}`, {
                 headers: {
                     Authorization: `${token}`,
                 },
@@ -38,7 +38,7 @@ const AuthProvider = ({ children }) => {
     const login = async (email, password) => {
         setLoading(true);
         try {
-            const response = await axios.post('https://project-nir-backend.vercel.app/login', {
+            const response = await axios.post('http://localhost:5000/login', {
                 email,
                 password,
             });
@@ -63,7 +63,7 @@ const AuthProvider = ({ children }) => {
 
     const logout = () => {
         // invalidate token
-        fetch(`https://project-nir-backend.vercel.app/logout?jwt=${token}`,)
+        fetch(`http://localhost:5000/logout?jwt=${token}`,)
             .then(res => res.json())
             .then(data => console.log(data))
         setUser(null);

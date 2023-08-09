@@ -56,7 +56,7 @@ const HouseRentFormStep4 = ({ formData, onSubmit }) => {
             },
         };
 
-        axios.post('https://project-nir-backend.vercel.app/create-post', postData, {
+        axios.post('http://localhost:5000/create-post', postData, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `${localStorage.getItem('jwt')}`

@@ -14,7 +14,7 @@ const MakeAdmin = () => {
     const [selectedValue, setSelectedValue] = useState('email');
 
     const { isLoading, error, data } = useQuery('allUsers', () =>
-        fetch('https://project-nir-backend.vercel.app/all-users', {
+        fetch('http://localhost:5000/all-users', {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `${localStorage.getItem('jwt')}`
@@ -42,7 +42,7 @@ const MakeAdmin = () => {
             }
         };
 
-        axios.put(`https://project-nir-backend.vercel.app/update-user/${selectedUserId}`, data, { headers })
+        axios.put(`http://localhost:5000/update-user/${selectedUserId}`, data, { headers })
             .then(response => {
                 if(response.data.status == 200){
                     alert('User is now an admin');

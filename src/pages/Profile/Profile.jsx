@@ -13,7 +13,7 @@ const Profile = () => {
   const [searchUser, setSearchUser] = useState('');
 
   const { isLoading, error, data } = useQuery('allUsers', () =>
-    fetch('https://project-nir-backend.vercel.app/all-users', {
+    fetch('http://localhost:5000/all-users', {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `${localStorage.getItem('jwt')}`
