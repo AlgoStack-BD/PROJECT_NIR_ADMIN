@@ -32,7 +32,7 @@ const Profile = () => {
   console.log(data.data)
 
   const options = data.data.map((option) => {
-    const firstLetter = option.name[0].toUpperCase();
+    const firstLetter = option.email[0].toUpperCase();
     return {
       firstLetter: firstLetter,
       ...option,
@@ -54,7 +54,7 @@ const Profile = () => {
           id="grouped-demo"
           options={options.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}
           groupBy={(option) => option.firstLetter}
-          getOptionLabel={(option) => option.name}
+          getOptionLabel={(option) => option.email}
           sx={{ width: '86%', margin: '0 auto', background: '#F1F1F1', borderRadius: '10px', mb: 3 }}
           renderInput={(params) => <TextField {...params} placeholder='Search user' />}
         />
