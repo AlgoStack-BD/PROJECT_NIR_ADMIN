@@ -10,6 +10,7 @@ const LoginForm = () => {
     const handleLogin = async (e) => {
         setError(null);
         e.preventDefault();
+        
         if (e.target.email.value === '' || e.target.password.value === '') {
             setError('Please fill in the form');
             return;
