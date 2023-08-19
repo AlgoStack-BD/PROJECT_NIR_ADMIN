@@ -41,7 +41,8 @@ function a11yProps(index) {
     };
 }
 
-export default function ProfileData() {
+export default function ProfileData({userId}) {
+    console.log(userId)
     const [value, setValue] = React.useState(0);
 
     const handleChange = (event, newValue) => {

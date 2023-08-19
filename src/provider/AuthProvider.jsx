@@ -42,7 +42,7 @@ const AuthProvider = ({ children }) => {
                 email,
                 password,
             });
-
+            
             if (response.data.status === 200) {
                 const data = response.data;
                 localStorage.setItem('jwt', data.jwt);
