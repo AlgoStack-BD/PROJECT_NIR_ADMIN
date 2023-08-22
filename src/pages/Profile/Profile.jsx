@@ -44,15 +44,11 @@ const Profile = () => {
     };
   });
   const handleInputChange = (event, value) => {
-    if (value) {
-      const selectedOption = options.find(option => type === 'name' ? option.name === value : option.email === value);
-      if (selectedOption) {
-        console.log(selectedOption)
-        setSearchUser(selectedOption.email);
-        setUserId(selectedOption._id)
-      }
-    } else {
-      setSearchUser('');
+    const selectedOption = options.find(option => type === 'name' ? option.name === value : option.email === value);
+    if (selectedOption) {
+      console.log(selectedOption)
+      setSearchUser(selectedOption.email);
+      setUserId(selectedOption._id)
     }
   };
   return (
@@ -82,7 +78,7 @@ const Profile = () => {
         groupBy={(option) => option.firstLetter}
         getOptionLabel={(option) => type === 'name' ? option.name : option.email}
         onInputChange={handleInputChange}
-        inputValue={searchUser}
+        // inputValue={searchUser}
         sx={{ width: '88%', margin: '0 auto', background: '#fff', borderRadius: '10px', mb: 3, mt: -18, mb: 10 }}
         renderInput={(params) => <TextField {...params} placeholder='Search user' />}
       />
