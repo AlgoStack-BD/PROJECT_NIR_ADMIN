@@ -79,7 +79,7 @@ const Profile = () => {
         getOptionLabel={(option) => type === 'name' ? option.name : option.email}
         onInputChange={handleInputChange}
         // inputValue={searchUser}
-        sx={{ width: '88%', margin: '0 auto', background: '#fff', borderRadius: '10px', mt: -18, mb: 10 }}
+        sx={{ width: '88%', margin: '0 auto', background: '#fff', borderRadius: 1, mt: -18, mb: 10 }}
         renderInput={(params) => <TextField {...params} placeholder='Search user' />}
       />
       <Grid container spacing={2} style={{ marginTop: "-60px", zIndex: 1, height: "100%" }}>

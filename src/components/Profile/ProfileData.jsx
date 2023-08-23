@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { Button, TextField } from '@mui/material';
 import DataTable from './DataTable';
+import { useQuery } from 'react-query';
 
 function CustomTabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -41,10 +42,21 @@ function a11yProps(index) {
     };
 }
 
-export default function ProfileData({userId}) {
+export default function ProfileData({ userId }) {
     console.log(userId)
     const [value, setValue] = React.useState(0);
 
+    const { isLoading, error, data } = useQuery(['singleUser', userId], () =>
+        fetch(`http://localhost:5000/single-user/${userId}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `${localStorage.getItem('jwt')}`
+            }
+        })
+            .then(res => res.json())
+    );
+    if (isLoading) return 'Loading...';
+    console.log(data.data)
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
@@ -68,23 +80,23 @@ export default function ProfileData({userId}) {
             </Box>
             <CustomTabPanel value={value} index={0}>
                 <p style={{ fontWeight: '600' }}>Personal Information</p>
-                <Box sx={{ display: "flex", width: '100%', justifyContent: 'space-between', my: 2 }}>
-                    <SingleInput label="Full name" placeholder="Mahinur Rahman" />
-                    <SingleInput label="Email" placeholder="mahi121.mr@gmail.com" />
+                <Box sx={{ display: { sm: 'block', md: "flex" }, width: '100%', justifyContent: 'space-between', my: 2 }}>
+                    <SingleInput label="Full name" placeholder={data?.data?.name} />
+                    <SingleInput label="Email" placeholder={data?.data?.email} />
                 </Box>
-                <Box sx={{ display: "flex", width: '100%', justifyContent: 'space-between', my: 2 }}>
-                    <SingleInput label="Phone" placeholder="01778287079" />
-                    <SingleInput label="Location" placeholder="Shahi eidgah, Sylhet" />
+                <Box sx={{ display: { sm: 'block', md: "flex" }, width: '100%', justifyContent: 'space-between', my: 2 }}>
+                    <SingleInput label="Phone" placeholder={data?.data?.phone ? data?.data?.phone : 'Number not added'} />
+                    <SingleInput label="Location" placeholder={data?.data?.location ? data?.data?.location : 'No location provided'} />
                 </Box>
                 {/* additional information */}
                 <p style={{ fontWeight: '600' }}>Additional Information</p>
-                <Box sx={{ display: "flex", width: '100%', justifyContent: 'space-between', my: 2 }}>
-                    <SingleInput label="City" placeholder="Sylhet" />
-                    <SingleInput label="State" placeholder="Sylhet" />
+                <Box sx={{ display: { sm: 'block', md: "flex" }, width: '100%', justifyContent: 'space-between', my: 2 }}>
+                    <SingleInput label="Looking for" placeholder="Bechelor | Family | Sublet | Hostel" />
+                    <SingleInput label="Account type" placeholder="Free | Lite | Premium " />
                 </Box>
-                <Box sx={{ display: "flex", width: '100%', justifyContent: 'space-between', my: 2 }}>
-                    <SingleInput label="Post Code" placeholder="3100" />
-                    <SingleInput label="Country" placeholder="Bangladesh" />
+                <Box sx={{ display: { sm: 'block', md: "flex" }, width: '100%', justifyContent: 'space-between', my: 2 }}>
+                    <SingleInput label="Account expires(if paid)" placeholder="09-10-2024" />
+                    <SingleInput label="Bkash | Nagad" placeholder={data?.data?.phone ? data?.data?.phone : 'Number not added'} />
                 </Box>
                 {/* <hr /> */}
                 <Button variant="contained" style={{ background: '#0D55DF', color: '#fff', marginTop: '20px' }}>Update</Button>
