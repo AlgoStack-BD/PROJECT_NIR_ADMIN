@@ -2,10 +2,11 @@ import React, { useContext } from 'react';
 import styles from '../../assets/css/login.module.css';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../provider/AuthProvider';
+import { CircularProgress } from '@mui/material';
 
 const LoginForm = () => {
     const navigate = useNavigate();
-    const { login } = useContext(AuthContext);
+    const { login, loading } = useContext(AuthContext);
     const [error, setError] = React.useState(null);
     const handleLogin = async (e) => {
         setError(null);
@@ -49,7 +50,12 @@ const LoginForm = () => {
                 <label htmlFor="email">Password</label>
                 <input name='password' type="password" placeholder="Password" className={styles.input} />
             </div>
-            <button className={styles.button} type='submit'>Login</button>
+
+            <button className={styles.button} type='submit'>
+                {
+                    loading ? <CircularProgress size={20} color="secondary" /> : 'Login'
+                }
+            </button>
             {
                 error && <div className={styles.error}>{error}</div>
             }
