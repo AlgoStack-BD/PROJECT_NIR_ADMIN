@@ -61,17 +61,24 @@ const Profile = () => {
         />
       </Box>
       {/* search box */}
-      <FormControl sx={{ m: -24.3, minWidth: 120, ml: 120, bgcolor: '#fff', borderRadius: 1 }} size="small">
-        <Select
-          labelId="demo-select-small-label"
-          id="demo-select-small"
-          value={type}
-          onChange={handleChangeType}
-        >
-          <MenuItem value={'name'}>Name</MenuItem>
-          <MenuItem value={'email'}>Email</MenuItem>
-        </Select>
-      </FormControl>
+      <Select 
+        sx={{
+          position: 'absolute',
+          top: '84px',
+          right: '190px',
+          width: '130px',
+          height: '43px',
+          background: '#FFFFFF',
+          // transform: 'translateX(-50%)',
+        }}
+        labelId="demo-select-small-label"
+        id="demo-select-small"
+        value={type}
+        onChange={handleChangeType}
+      >
+        <MenuItem value={'name'}>Name</MenuItem>
+        <MenuItem value={'email'}>Email</MenuItem>
+      </Select>
       <Autocomplete
         id="grouped-demo"
         options={options.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}

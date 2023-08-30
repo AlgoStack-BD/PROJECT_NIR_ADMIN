@@ -103,7 +103,7 @@ export default function ProfileData({ userId }) {
             </CustomTabPanel>
             <CustomTabPanel value={value} index={1}>
                 <p style={{ fontWeight: '600' }}>Account Stats preview</p>
-                <DataTable />
+                <DataTable userId={userId} />
             </CustomTabPanel>
         </Box>
     );
