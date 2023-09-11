@@ -5,9 +5,9 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import { Button, TextField } from '@mui/material';
+import { Button, Fade, Slide, Snackbar, TextField } from '@mui/material';
 import DataTable from './DataTable';
-import { useQuery } from 'react-query';
+import { QueryClient, useQuery, useQueryClient } from 'react-query';
 
 function CustomTabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -61,15 +61,104 @@ export default function ProfileData({ userId }) {
         setValue(newValue);
     };
 
+    const formData = {
+        name: data.data?.name,
+        email: data.data?.email,
+        phone: data.data?.phone,
+        location: data.data?.location,
+        lookingFor: data.data?.lookingFor,
+        accountType: data.data?.accountType,
+        accountExpires: data.data?.accountExpires,
+        bkash: data.data?.bkash,
+        nagad: data.data?.nagad,
+    }
+
     const SingleInput = ({ label, placeholder }) => {
         return (
             <div style={{ width: '95%' }}>
                 <p>{label}</p>
-                <input type="text" placeholder={placeholder} className={styles.input} />
+                <input type="text" onChange={(e) => {
+                    // console.log('changed', e.target.value)
+                    handleUpdate(label, e.target.value)
+
+                }} placeholder={placeholder} className={styles.input} />
             </div>
         )
     }
 
+    const handleUpdate = (label, value) => {
+        if (label == 'Full name') {
+            formData.name = value
+        }
+        if (label == 'Email') {
+            formData.email = value
+        }
+        if (label == 'Phone') {
+            formData.phone = value
+        }
+        if (label == 'Location') {
+            formData.location = value
+        }
+        if (label == 'Looking for') {
+            formData.lookingFor = value
+        }
+        if (label == 'Account type') {
+            formData.accountType = value
+        }
+        if (label == 'Account expires(if paid)') {
+            formData.accountExpires = value
+        }
+        if (label == 'Bkash | Nagad') {
+            formData.bkash = value
+        }
+    }
+
+    const queryClient = useQueryClient()
+    const handleUserUpdate = () => {
+        handleClick(SlideTransition)();
+        console.log('update')
+        console.log(formData)
+
+        fetch(`http://localhost:5000/update-user/${userId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `${localStorage.getItem('jwt')}`
+            },
+            body: JSON.stringify({
+                data: formData
+            })
+
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data)
+                queryClient.invalidateQueries('singleUser', userId)
+            })
+    }
+    // for snackbar
+    function SlideTransition(props) {
+        return <Slide {...props} direction="up" />;
+    }
+    // for snackbar
+    const [state, setState] = React.useState({
+        open: false,
+        Transition: Fade,
+    });
+
+    const handleClick = (Transition) => () => {
+        setState({
+            open: true,
+            Transition,
+        });
+    };
+
+    const handleClose = () => {
+        setState({
+            ...state,
+            open: false,
+        });
+    };
     return (
         <Box sx={{ width: '90%' }} className={styles.parentData}>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -96,10 +185,23 @@ export default function ProfileData({ userId }) {
                 </Box>
                 <Box sx={{ display: { sm: 'block', md: "flex" }, width: '100%', justifyContent: 'space-between', my: 2 }}>
                     <SingleInput label="Account expires(if paid)" placeholder="09-10-2024" />
-                    <SingleInput label="Bkash | Nagad" placeholder={data?.data?.phone ? data?.data?.phone : 'Number not added'} />
+                    <SingleInput label="Bkash" placeholder={data?.data?.phone ? data?.data?.phone : 'Number not added'} />
                 </Box>
                 {/* <hr /> */}
-                <Button variant="contained" style={{ background: '#0D55DF', color: '#fff', marginTop: '20px' }}>Update</Button>
+                <Button
+                    variant="contained"
+                    style={{ background: '#0D55DF', color: '#fff', marginTop: '20px' }}
+                    onClick={handleUserUpdate}
+                >
+                    Update
+                </Button>
+                <Snackbar
+                    open={state.open}
+                    onClose={handleClose}
+                    TransitionComponent={state.Transition}
+                    message="Updated new information"
+                    key={state.Transition.name}
+                />
             </CustomTabPanel>
             <CustomTabPanel value={value} index={1}>
                 <p style={{ fontWeight: '600' }}>Account Stats preview</p>
