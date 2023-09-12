@@ -43,9 +43,14 @@ function a11yProps(index) {
 }
 
 export default function ProfileData({ userId }) {
+    const queryClient = useQueryClient()
     console.log(userId)
     const [value, setValue] = React.useState(0);
-
+    // for snackbar
+    const [state, setState] = React.useState({
+        open: false,
+        Transition: Fade,
+    });
     const { isLoading, error, data } = useQuery(['singleUser', userId], () =>
         fetch(`http://localhost:5000/single-user/${userId}`, {
             headers: {
@@ -56,7 +61,7 @@ export default function ProfileData({ userId }) {
             .then(res => res.json())
     );
     if (isLoading) return 'Loading...';
-    console.log(data.data)
+
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
@@ -73,15 +78,55 @@ export default function ProfileData({ userId }) {
         nagad: data.data?.nagad,
     }
 
-    const SingleInput = ({ label, placeholder }) => {
+    const SingleInput = ({ label, placeholder, isAdditional }) => {
         return (
             <div style={{ width: '95%' }}>
                 <p>{label}</p>
-                <input type="text" onChange={(e) => {
-                    // console.log('changed', e.target.value)
-                    handleUpdate(label, e.target.value)
 
-                }} placeholder={placeholder} className={styles.input} />
+                {
+                    // Additional information
+                    isAdditional ?
+                        <>
+                            <select name="aditional" className={styles.input}
+                                onChange={(e) => {
+                                    // console.log(e.target.value)
+                                    handleUpdate(label, e.target.value)
+                                }}
+                            >
+                                {/* if looking for portion selected */}
+                                {
+                                    label == 'Looking for' &&
+                                    <>
+                                        <option className={styles.options} selected >{placeholder} Selected</option>
+                                        <option className={styles.options} value="Family">Family</option>
+                                        <option className={styles.options} value="Mess">Mess</option>
+                                        <option className={styles.options} value="Hostel(Boys)">Boys Hostel</option>
+                                        <option className={styles.options} value="Hostel(Girls)">Girls Hostel</option>
+                                        <option className={styles.options} value="Sublet">Sublet</option>
+                                    </>
+                                }
+                                {/* if account type portion selected */}
+                                {
+                                    label == 'Account type' &&
+                                    <>
+                                        <option className={styles.options} selected >{placeholder} Selected</option>
+                                        <option className={styles.options} value="Free">Free</option>
+                                        <option className={styles.options} value="Premium">Premium</option>
+                                    </>
+                                }
+                            </select>
+                        </> :
+                        // Personal information
+                        <input type="text"
+                            onChange={(e) => {
+                                handleUpdate(label, e.target.value)
+                            }}
+                            placeholder={placeholder}
+                            className={styles.input}
+                        />
+
+                }
+
             </div>
         )
     }
@@ -113,10 +158,9 @@ export default function ProfileData({ userId }) {
         }
     }
 
-    const queryClient = useQueryClient()
     const handleUserUpdate = () => {
         handleClick(SlideTransition)();
-        console.log('update')
+        // console.log('update')
         console.log(formData)
 
         fetch(`http://localhost:5000/update-user/${userId}`, {
@@ -140,11 +184,6 @@ export default function ProfileData({ userId }) {
     function SlideTransition(props) {
         return <Slide {...props} direction="up" />;
     }
-    // for snackbar
-    const [state, setState] = React.useState({
-        open: false,
-        Transition: Fade,
-    });
 
     const handleClick = (Transition) => () => {
         setState({
@@ -180,8 +219,8 @@ export default function ProfileData({ userId }) {
                 {/* additional information */}
                 <p style={{ fontWeight: '600' }}>Additional Information</p>
                 <Box sx={{ display: { sm: 'block', md: "flex" }, width: '100%', justifyContent: 'space-between', my: 2 }}>
-                    <SingleInput label="Looking for" placeholder="Bechelor | Family | Sublet | Hostel" />
-                    <SingleInput label="Account type" placeholder="Free | Lite | Premium " />
+                    <SingleInput label="Looking for" placeholder={data.data?.lookingFor} isAdditional={true} />
+                    <SingleInput label="Account type" placeholder={data?.data?.accountType} isAdditional={true} />
                 </Box>
                 <Box sx={{ display: { sm: 'block', md: "flex" }, width: '100%', justifyContent: 'space-between', my: 2 }}>
                     <SingleInput label="Account expires(if paid)" placeholder="09-10-2024" />

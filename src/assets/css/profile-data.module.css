@@ -21,3 +21,9 @@
     outline: none;
     background: #F1F1F1;
 }
+
+.options{
+    padding: 10px !important;
+    width: 90%;
+    font-size: 18px;
+}

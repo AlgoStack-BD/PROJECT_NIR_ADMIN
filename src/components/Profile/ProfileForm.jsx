@@ -14,6 +14,21 @@ import Grow from '@mui/material/Grow';
 
 
 const ProfileForm = ({ userId }) => {
+  const handleImageUpload = (e) => {
+    e.preventDefault();
+    // hiddenFileInput.current.click();
+    const image = e.target.files[0];
+    // size validation
+    if (image.size > 1024 * 1024 * 5) {
+      return alert("Size too large!");
+    }
+    // type validation
+    if (image.type !== "image/jpeg" && image.type !== "image/png") {
+      return alert("Only JPG and PNG format allowed!");
+    }
+    
+    console.log(image)
+  }
   function SlideTransition(props) {
     return <Slide {...props} direction="up" />;
   }
@@ -88,7 +103,15 @@ const ProfileForm = ({ userId }) => {
     <Box className={styles.formParent} >
       <div className={styles.formImage}>
         <img src={profilePic} alt="profile-image" /> {/* data?.data?.image */}
-        <img src={addButton} alt="add-button-image" className={styles.addButton} />
+        <input
+          type="file"
+          onChange={handleImageUpload}
+          // ref={hiddenFileInput}
+          // style={{ display: 'none' }} // Make the file input element invisible
+        />
+        <img src={addButton} onClick={() => {
+          // alert('Add button clicked')
+        }} alt="add-button-image" className={styles.addButton} />
         {/* search user here */}
       </div>
       <p variant="h5" className={styles.formTitle}>{data?.data?.name}</p>
