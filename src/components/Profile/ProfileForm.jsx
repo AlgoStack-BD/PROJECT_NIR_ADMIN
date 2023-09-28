@@ -1,34 +1,59 @@
 import { Box, Divider, Typography } from '@mui/material'
-import React from 'react'
+import React, { useRef, useState } from 'react'
 import styles from '../../assets/css/profile-form.module.css'
 import profilePic from '../../assets/img/profile/profile.svg'
 import addButton from '../../assets/img/profile/addButton.svg'
 import location from '../../assets/img/profile/location.svg'
-import { useQuery } from 'react-query'
+import { useQuery, useQueryClient } from 'react-query'
 import Button from '@mui/material/Button';
 import Snackbar from '@mui/material/Snackbar';
 import Fade from '@mui/material/Fade';
 import Slide from '@mui/material/Slide';
-import Grow from '@mui/material/Grow';
-
-
+import 'formdata-polyfill';
 
 const ProfileForm = ({ userId }) => {
-  const handleImageUpload = (e) => {
-    e.preventDefault();
-    // hiddenFileInput.current.click();
-    const image = e.target.files[0];
-    // size validation
-    if (image.size > 1024 * 1024 * 5) {
-      return alert("Size too large!");
+  const fileInput = useRef(null);
+  const queryClient = useQueryClient();
+
+  const handleFileUpload = () => {
+    const token = localStorage.getItem('jwt');
+    const userId = localStorage.getItem('userId');
+    const myHeaders = new Headers();
+    myHeaders.append('Authorization', token);
+    console.log(fileInput?.current.files[0])
+    // check size and type here
+    if(fileInput?.current.files[0].size > 1024 * 1024 * 5) {  
+      console.log('Size too large!');
+
+      return;
     }
-    // type validation
-    if (image.type !== "image/jpeg" && image.type !== "image/png") {
-      return alert("Only JPG and PNG format allowed!");
-    }
-    
-    console.log(image)
-  }
+    if(fileInput?.current.files[0].type !== 'image/jpeg' && fileInput?.current.files[0].type !== 'image/png' && fileInput?.current.files[0].type !== 'image/jpg') {
+      console.log('This type of file is not allowed!');
+      return;
+    } 
+    var formdata = new FormData();
+    formdata.append("file", fileInput?.current.files[0], fileInput?.current.files[0].name);
+
+    const formData = new FormData(); // Renamed variable to formData
+    formData.append('file', fileInput.current.files[0]);
+
+    const requestOptions = {
+      method: 'PUT',
+      headers: myHeaders,
+      body: formData,
+      redirect: 'follow',
+    };
+
+    fetch(`http://localhost:5000/update-user/${userId}`, requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        queryClient.invalidateQueries('singleUser');
+        console.log(result)
+      })
+      .catch((error) => console.log('error', error));
+  };
+
+
   function SlideTransition(props) {
     return <Slide {...props} direction="up" />;
   }
@@ -64,7 +89,7 @@ const ProfileForm = ({ userId }) => {
   );
 
 
-  const FormData = ({ text, amount }) => {
+  const MyFormData = ({ text, amount }) => {
     return (
       <div className={styles.formData}>
         <span>{text}</span>
@@ -96,30 +121,79 @@ const ProfileForm = ({ userId }) => {
   if (isLoading) return 'Loading...'
   if (error) return 'Error loading data';
 
-  console.log(data)
+  // console.log(data.data._id)
 
+  // const handleImageUpload = async () => {
+  //   console.log('baal')
+  //   if (image.size > 1024 * 1024 * 5) {
+  //     console.log('Size too large!');
+  //   }
+
+  //   if (
+  //     image.type !== 'image/jpeg' &&
+  //     image.type !== 'image/png' &&
+  //     image.type !== 'image/jpg'
+  //   ) {
+  //     console.log('This type of file is not allowed!');
+  //   }
+
+  //   const formData = new FormData();
+  //   formData.append('image', image);
+  //   console.log(formData)
+  //   try {
+  //     const response = await axios.post(
+  //       `http://localhost:5000/update-user-image`,
+  //       formData,
+  //       {
+  //         headers: {
+  //           'Content-Type': 'multipart/form-data',
+  //         },
+  //       }
+  //     );
+  //     console.log(response)
+  //     if (response.status === 200) {
+  //       handleClick(SlideTransition)();
+  //       console.log('Image uploaded successfully.');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error uploading image:', error);
+  //   }
+  // };
 
   return (
     <Box className={styles.formParent} >
       <div className={styles.formImage}>
-        <img src={profilePic} alt="profile-image" /> {/* data?.data?.image */}
+        <img src={`http://localhost:5000/uploads/${data?.data?.image}`} alt="profile-image" style={{
+          width: '114px',
+          height: '114px',
+          borderRadius: '50%',
+          objectFit: 'cover'
+        }} />
+
         <input
           type="file"
-          onChange={handleImageUpload}
-          // ref={hiddenFileInput}
-          // style={{ display: 'none' }} // Make the file input element invisible
+          ref={fileInput}
+          style={{ display: 'none' }}
+          onChange={handleFileUpload} // Call handleFileUpload on file selection
         />
-        <img src={addButton} onClick={() => {
-          // alert('Add button clicked')
-        }} alt="add-button-image" className={styles.addButton} />
+        <img
+          src={addButton}
+          onClick={() => {
+            // When the image is clicked, trigger the file input
+            console.log('ok');
+            fileInput.current.click();
+          }}
+          alt="add-button-image"
+          className={styles.addButton}
+        />
         {/* search user here */}
       </div>
       <p variant="h5" className={styles.formTitle}>{data?.data?.name}</p>
       {/* total post for rent as owners */}
-      <FormData text="Rent request applied" amount={data?.data?.totoalPost} />
-      <FormData text="Total approved request" amount={data?.data?.rentSuccess} />
+      <MyFormData text="Rent request applied" amount={data?.data?.totoalPost} />
+      <MyFormData text="Total approved request" amount={data?.data?.rentSuccess} />
       {/* pending = total post - rent success */}
-      <FormData text="Pending post" amount={parseInt(data?.data?.totoalPost) - parseInt(data?.data?.rentSuccess)} />
+      <MyFormData text="Pending post" amount={parseInt(data?.data?.totoalPost) - parseInt(data?.data?.rentSuccess)} />
 
       <hr style={{
         height: '40px',

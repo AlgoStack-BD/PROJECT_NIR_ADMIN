@@ -54,18 +54,18 @@ const Profile = () => {
   return (
     <Box>
       <Box sx={{ height: '30vh', zIndex: -1, background: `linear-gradient(180deg, #3E6EC9 0%, #0D55DF 100%)`, position: 'relative' }}>
-        <img
+        {/* <img
           style={{ position: 'absolute', right: 40, top: 20, cursor: 'pointer' }}
           src={imageGrp}
           alt="change-Image-icon"
-        />
+        /> */}
       </Box>
       {/* search box */}
-      <Select 
+      <Select
         sx={{
           position: 'absolute',
           top: '84px',
-          right: '190px',
+          right: '5%',
           width: '130px',
           height: '43px',
           background: '#FFFFFF',
@@ -86,7 +86,12 @@ const Profile = () => {
         getOptionLabel={(option) => type === 'name' ? option.name : option.email}
         onInputChange={handleInputChange}
         // inputValue={searchUser}
-        sx={{ width: '88%', margin: '0 auto', background: '#fff', borderRadius: 1, mt: -18, mb: 10 }}
+        sx={{
+          width: '88%', margin: '0 auto', background: '#fff', borderRadius: 1, mt: -18, mb: 10,
+          // position: 'sticky',
+          // top: '60px',
+          // zIndex: 1,
+        }}
         renderInput={(params) => <TextField {...params} placeholder='Search user' />}
       />
       <Grid container spacing={2} style={{ marginTop: "-60px", zIndex: 1, height: "100%" }}>
