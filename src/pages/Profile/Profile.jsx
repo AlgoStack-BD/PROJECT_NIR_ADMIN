@@ -36,7 +36,7 @@ const Profile = () => {
 
   if (error) return 'Internal server error: ' + error.message;
 
-  const options = data.data.map((option) => {
+  const options = data?.data?.map((option) => {
     const firstLetter = option.email[0].toUpperCase();
     return {
       firstLetter: firstLetter,
@@ -81,16 +81,13 @@ const Profile = () => {
       </Select>
       <Autocomplete
         id="grouped-demo"
-        options={options.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}
+        options={options?.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}
         groupBy={(option) => option.firstLetter}
         getOptionLabel={(option) => type === 'name' ? option.name : option.email}
         onInputChange={handleInputChange}
         // inputValue={searchUser}
         sx={{
           width: '88%', margin: '0 auto', background: '#fff', borderRadius: 1, mt: -18, mb: 10,
-          // position: 'sticky',
-          // top: '60px',
-          // zIndex: 1,
         }}
         renderInput={(params) => <TextField {...params} placeholder='Search user' />}
       />
