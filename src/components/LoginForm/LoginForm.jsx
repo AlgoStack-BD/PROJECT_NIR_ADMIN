@@ -53,7 +53,7 @@ const LoginForm = () => {
 
             <button className={styles.button} type='submit'>
                 {
-                    loading ? <CircularProgress size={20} color="secondary" /> : 'Login'
+                    loading ? <CircularProgress size={20}  sx={{color:"#fff"}} /> : 'Login'
                 }
             </button>
             {

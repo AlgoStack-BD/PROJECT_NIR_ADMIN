@@ -22,23 +22,54 @@ const DashboardPage = () => {
     .then(data => data.data)
 
   );
-  console.log(allUsers)
-  // if (loading) return 'Loading...';
+  // console.log(allUsers)
+  if (loading) return 'Loading...';
+  if (error) return 'Error...';
+
+
   // cards on top of the dashboard
   const CardParent = () => {
 
+    const dateFromObjectId = (objectId) => {
+      let date = new Date(parseInt(objectId.substring(0, 8), 16) * 1000);
+      return date;
+    };
+
+    const isWithinLast24Hours = (date) => {
+      const twentyFourHoursAgo = new Date();
+      twentyFourHoursAgo.setHours(twentyFourHoursAgo.getHours() - 24);
+      return date > twentyFourHoursAgo;
+    };
+
+    // Function to get the count of new users who joined in the last 24 hours
+    const getNewUsersCountInLast24Hours = () => {
+      if (Array.isArray(allUsers)) {
+        return allUsers.filter(user => isWithinLast24Hours(dateFromObjectId(user._id))).length;
+      }
+      return 0;
+    };
+
+    // Function for getting the count of unverified users
+    const getUnverifiedUsersCount = () => {
+      if (Array.isArray(allUsers)) {
+        return allUsers.filter(user => !user.isVerified).length;
+      }
+      return 0;
+    };
+
+
     return <Grid container spacing={2} sx={{ mt: 1, px: 2 }}>
       <Grid item xs={12} md={3}>
-        <Card text={'New User'} number={13} icon={newUser} />
+        <Card text={'New User'} number={getNewUsersCountInLast24Hours()} icon={newUser} />
       </Grid>
       <Grid item xs={12} md={3}>
-        <Card text={'Total User'} number={allUsers? allUsers?.length : 0} icon={TotalUser} />
+        <Card text={'Total User'} number={allUsers ? allUsers?.length : 0} icon={TotalUser} />
       </Grid>
       <Grid item xs={12} md={3}>
-        <Card text={'Pending User'} number={13} icon={pendingUser} />
+        <Card text={'Pending User'} number={getUnverifiedUsersCount()} icon={pendingUser} />
       </Grid>
       <Grid item xs={12} md={3}>
-        <Card text={'Revenue'} number={13} icon={revenue} />
+        <Card text={'Revenue'} number={0} icon={revenue} />
       </Grid>
     </Grid>
 
