@@ -17,7 +17,7 @@ const ProfileForm = ({ userId }) => {
 
   const handleFileUpload = () => {
     const token = localStorage.getItem('jwt');
-    const userId = localStorage.getItem('userId');
+    // const userId = localStorage.getItem('userId');
     const myHeaders = new Headers();
     myHeaders.append('Authorization', token);
     console.log(fileInput?.current.files[0])

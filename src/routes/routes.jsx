@@ -9,6 +9,7 @@ import PendingPost from '../pages/PendingPost/PendingPost';
 import TotalRevenue from '../pages/TotalRevenue/TotalRevenue';
 import Profile from '../pages/Profile/Profile';
 import PrivateRoute from './PrivateRoute';
+import ErrorPage from '../pages/ErrorPage/ErrorPage';
 // import ProtectedRoute from './ProtectedRoute';
 
 const routes = createBrowserRouter([
@@ -33,26 +34,32 @@ const routes = createBrowserRouter([
             {
                 path: 'home',
                 element: <Homepage />,
+                errorElement: <ErrorPage />,
             },
             {
                 path: 'dashboard',
                 element: <DashboardPage />,
+                errorElement: <ErrorPage />,
             },
             {
                 path: 'profile',
                 element: <Profile />,
+                errorElement: <ErrorPage />,
             },
             {
                 path: 'users',
                 element: <Users />,
+                errorElement: <ErrorPage />,
             },
             {
                 path: 'pendingPost',
                 element: <PendingPost />,
+                errorElement: <ErrorPage />,
             },
             {
                 path: 'totalRevenue',
                 element: <TotalRevenue />,
+                errorElement: <ErrorPage />,
             },
         ],
     },

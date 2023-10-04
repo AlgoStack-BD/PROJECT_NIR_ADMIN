@@ -203,9 +203,9 @@ export default function MiniDrawer() {
                 </DrawerHeader>
                 {/* here is icon and text for sidebar */}
                 <List style={{ marginTop: '-7px' }}>
+                    <CustomList icon={dashboardIcon} whiteIcon={dashboardIconWhite} text="Dashboard" link="dashboard" pathText={pathText} />
                     <CustomList icon={generalIcon} whiteIcon={generalIconWhite} text="Home" link="home" pathText={pathText} />
                     <CustomList icon={profileIcon} whiteIcon={profileIconWhite} text="Profile" link="profile" pathText={pathText} />
-                    <CustomList icon={dashboardIcon} whiteIcon={dashboardIconWhite} text="Dashboard" link="dashboard" pathText={pathText} />
                     <CustomList icon={usersIcon} whiteIcon={usersIconWhite} text="Users" link="users" pathText={pathText} />
                     <CustomList icon={pendingIcon} whiteIcon={pendingIconWhite} text="Pending Post" link="pendingPost" pathText={pathText} />
                     <CustomList icon={revenueIcon} whiteIcon={revenueIconWhite} text="Total Revenue" link="totalRevenue" pathText={pathText} />
