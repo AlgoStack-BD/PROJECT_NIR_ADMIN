@@ -5,7 +5,7 @@ import TotalUser from '../../assets/img/dashboard/total-user.svg'
 import pendingUser from '../../assets/img/dashboard/pending-user.svg'
 import revenue from '../../assets/img/dashboard/revenue.svg'
 import styles from '../../assets/css/dashboard.module.css'
-import { Grid } from '@mui/material'
+import { Box, Grid } from '@mui/material'
 import { useQuery } from 'react-query'
 
 
@@ -58,7 +58,7 @@ const DashboardPage = () => {
     };
 
 
-    return <Grid container spacing={2} sx={{ mt: 1, px: 2 }}>
+    return <Grid container spacing={2} sx={{ mt: 1 }}>
       <Grid item xs={12} md={3}>
         <Card text={'New User'} number={getNewUsersCountInLast24Hours()} icon={newUser} />
       </Grid>
@@ -77,10 +77,10 @@ const DashboardPage = () => {
 
 
   return (
-    <div>
+    <Box sx={{ px: { xs: 1, md: 5 } }}>
       <CardParent />
 
-    </div>
+    </Box>
   )
 }
 
