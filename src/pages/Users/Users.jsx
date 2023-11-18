@@ -1,17 +1,12 @@
 import React from 'react'
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { useQuery } from 'react-query';
-import { showSuccessToast } from '../../components/Toast/SuccessToast';
+import { Button, Menu, MenuItem } from '@mui/material';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 
 const Users = () => {
+
   const columns = [
     {
       field: 'user',
@@ -95,37 +90,59 @@ const Users = () => {
     {
       field: 'action',
       headerName: 'Action',
-      width: 100,
+      width: 150,
       type: 'number',
-      renderCell: (params) => (
-        <button
-          style={{
-            background: 'transparent',
-            border: 'none',
-            outline: 'none',
-            cursor: 'pointer',
-            color: '#3E6EC9',
-            fontWeight: 'bold'
-          }}
-          onClick={() => {
-            alert('Are you sure you want to delete this user?')
-          }}
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="17" viewBox="0 0 16 17" fill="none">
-            <g clip-path="url(#clip0_353_269)">
-              <ellipse cx="7.66797" cy="3.8136" rx="1" ry="1" fill="#747474" />
-              <ellipse cx="7.66797" cy="9.14697" rx="1" ry="1" fill="#747474" />
-              <ellipse cx="7.66797" cy="14.4802" rx="1" ry="1" fill="#747474" />
-            </g>
-            <defs>
-              <clipPath id="clip0_353_269">
-                <rect width="16" height="16" fill="white" transform="translate(0 0.813599)" />
-              </clipPath>
-            </defs>
-          </svg>
-        </button>
-      )
-    }
+      renderCell: (params) => {
+        const [anchorEl, setAnchorEl] = React.useState(null);
+    
+        const handleClick = (event) => {
+          setAnchorEl(event.currentTarget);
+        };
+    
+        const handleClose = () => {
+          setAnchorEl(null);
+        };
+    
+        return (
+          <div>
+            <Button
+              style={{
+                background: 'transparent',
+                border: 'none',
+                outline: 'none',
+                cursor: 'pointer',
+                color: '#3E6EC9',
+                fontWeight: 'bold',
+                width: '10px',
+              }}
+              onClick={handleClick}
+            >
+              <MoreVertIcon />
+            </Button>
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+              style={{
+                marginLeft:'-70px',
+                boxShadow: 'none',
+              }}
+            >
+              <MenuItem onClick={() => alert('Edit user')}>
+                Edit User
+              </MenuItem>
+              <MenuItem onClick={() => alert('Ban user')}>Ban User</MenuItem>
+              <MenuItem onClick={() => alert('Update user')}>
+                Update User
+              </MenuItem>
+              <MenuItem onClick={() => alert('Create user')}>
+                Create User
+              </MenuItem>
+            </Menu>
+          </div>
+        );
+      },
+    },
   ];
 
 
@@ -141,11 +158,25 @@ const Users = () => {
       console.log(data)
       return data.data
     } else {
-      throw new Error('Could not fetch users')
+      return [];
+      // throw new Error('Could not fetch users')
     }
   }
   const { isLoading, error, data: users } = useQuery('allUsers', fetchUsers);
-  // const mappedRows = 
+
+  // Check if users is an array before calling map
+  const mappedRows = Array.isArray(users) ? users.map((user) => ({
+    id: user._id,
+    user: user.name,
+    phone: user.phone,
+    email: user.email,
+    location: user.location,
+    image: user.image,
+    isVerified: user.isVerified,
+    totalPost: user.totalPost, // Fix typo in totalPost
+    rentSuccess: user.rentSuccess,
+  })) : [];
+
   return (
     <div style={{
       margin: '20px 32px',
@@ -161,15 +192,16 @@ const Users = () => {
         <div style={{
           display: 'flex',
           alignItems: 'center',
-          width: '80%',
+          width: '100%',
           height: 40,
           background: '#FFFFFF',
           borderRadius: 5,
           padding: '0 10px',
           border: '1px solid #E5E5E5',
         }}>
+          {/* search icon */}
           <svg xmlns="http://www.w3.org/2000/svg" width="17" height="16" viewBox="0 0 17 16" fill="none">
-            <g clip-path="url(#clip0_60_3980)">
+            <g clipPath="url(#clip0_60_3980)">
               <path d="M7.26562 12.5C10.1651 12.5 12.5156 10.1495 12.5156 7.25C12.5156 4.35051 10.1651 2 7.26562 2C4.36613 2 2.01562 4.35051 2.01562 7.25C2.01562 10.1495 4.36613 12.5 7.26562 12.5Z" stroke="#C4C4C4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
               <path d="M10.9766 10.9625L14.0141 14.0001" stroke="#C4C4C4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
             </g>
@@ -179,7 +211,11 @@ const Users = () => {
               </clipPath>
             </defs>
           </svg>
+          {/* search input box */}
           <input
+            onChange={(e) => {
+              console.log(e.target.value)
+            }}
             style={{
               border: 'none',
               outline: 'none',
@@ -213,7 +249,7 @@ const Users = () => {
       </div>
 
       {/* select all user / only varified user */}
-      <select style={{
+      {/* <select style={{
         width: '20%',
         height: 40,
         background: '#FFFFFF',
@@ -221,12 +257,14 @@ const Users = () => {
         padding: '0 10px',
         border: '1px solid #E5E5E5',
         outline: 'none',
-        marginBlock: 20,
+        marginBlock: 10,
+        appearance: 'none',
       }}>
         <option value="all">All Users</option>
-        <option value="verified">Verified Users</option>
-      </select>
+        <option value="unverified">Unverified Users</option>
+      </select> */}
 
+      {/* table of users data */}
       <div style={{ height: 400, width: '100%' }}>
         {
           error && <div>
@@ -240,17 +278,7 @@ const Users = () => {
         }
         {
           users && <DataGrid
-            rows={users?.map(user => ({
-              id: user._id,
-              user: user.name,
-              phone: user.phone,
-              email: user.email,
-              location: user.location,
-              image: user.image,
-              isVerified: user.isVerified,
-              totoalPost: user.totalPost,
-              rentSuccess: user.rentSuccess,
-            }))}
+            rows={mappedRows}
             style={{
               boxShadow: 'none',
               border: 'none',
@@ -263,6 +291,28 @@ const Users = () => {
             }}
             pageSizeOptions={[5, 10]}
             checkboxSelection
+            // email filter
+            slots={{
+              toolbar: GridToolbar,
+              // not found text
+              noRowsOverlay: () => <div>No users found.</div>,
+            }}
+            // disable density selector and column selector
+            disableDensitySelector
+            disableColumnSelector
+            // add pdf export
+            // name of the export button is export pdf
+            slotProps={{
+              toolbar: {
+                exportButton: {
+                  csvOptions: {
+                    fields: ['user', 'email', 'phone', 'location', 'isVerified', 'totoalPost', 'rentSuccess'],
+                  },
+                  // export all data
+                  exportAllData: true,
+                },
+              },
+            }}
           />
         }
 
