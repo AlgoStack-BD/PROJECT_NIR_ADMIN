@@ -232,9 +232,9 @@ export default function MiniDrawer() {
                     </ListItemButton>
                 </List>
             </Drawer>
-            <Box component="main" sx={{ flexGrow: 1 }}>
+            <Box component="main" sx={{ flexGrow: 1}} >
                 <DrawerHeader />
-                <Outlet />
+                <Outlet  />
             </Box>
         </Box>
     );
