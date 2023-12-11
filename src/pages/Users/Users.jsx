@@ -12,8 +12,27 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const UpdateUserForm = ({ updateUser, handleClose }) => {
+const Users = () => {
+  const [open, setOpen] = React.useState(false);
+  const [selectedAction, setSelectedAction] = React.useState("");
+  const [selectedUser, setSelectedUser] = React.useState(null);
+  const handleClickOpen = (action, user) => {
+    console.log(action);
+    console.log(user)
+    setSelectedUser(user);
+    setSelectedAction(action);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+  
+const UpdateUserForm = ({ handleClose }) => {
+  const selectedUserId = selectedUser ? selectedUser : selectedRows[selectedRows.length - 1].id;
+
   const [formData, setFormData] = useState({
+    id: selectedUserId,
     name: '',
     // email: '',
     // password: '',
@@ -43,6 +62,8 @@ const UpdateUserForm = ({ updateUser, handleClose }) => {
   const handleSubmit = () => {
     // Call your API to update user details with formData
     // e.g., updateUser(formData);
+    
+    // axios.put(`http://localhost:5000/update-user/64d160010bfc7deeb54d522b`, P)
     alert('Call disable API here with updated data: ' + JSON.stringify(formData));
     handleClose();
   };
@@ -109,18 +130,6 @@ const UpdateUserForm = ({ updateUser, handleClose }) => {
     </Box>
   );
 };
-const Users = () => {
-  const [open, setOpen] = React.useState(false);
-  const [selectedAction, setSelectedAction] = React.useState("");
-  const handleClickOpen = (action) => {
-    setSelectedAction(action);
-    console.log(action);
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
   const columns = [
     // {
     //   field: 'id',
@@ -173,7 +182,7 @@ const Users = () => {
     {
       field: 'location',
       headerName: 'Location',
-      width: 150,
+      width: 250,
       renderCell: (params) => (
         <Tooltip title={params.row.location}>
           {params.value ? params.value : 'Not Provided'}
@@ -183,7 +192,7 @@ const Users = () => {
     {
       field: 'isVerified',
       headerName: 'Status',
-      width: 130,
+      width: 150,
       // if true then verified else not verified
       renderCell: (params) => (
         <div title={params.row.isVerified} >
@@ -213,25 +222,25 @@ const Users = () => {
       // valueGetter: (params) =>
       //   `${params.row.firstName || ''} ${params.row.lastName || ''}`,
     },
-    {
-      field: 'isAdmin',
-      headerName: 'Admin',
-      width: 100,
-      // if true then show admin else not admin
-      renderCell: (params) => (
-        <div>
-          {params.value == true ?
-            <span style={{ background: 'green', padding: '7px 15px', borderRadius: '30px', color: 'white' }}>
-              Admin
-            </span>
-            : 'Not Admin'}
-        </div>
-      )
-    },
+    // {
+    //   field: 'isAdmin',
+    //   headerName: 'Admin',
+    //   width: 100,
+    //   // if true then show admin else not admin
+    //   renderCell: (params) => (
+    //     <div>
+    //       {params.value == true ?
+    //         <span style={{ background: 'green', padding: '7px 15px', borderRadius: '30px', color: 'white' }}>
+    //           Admin
+    //         </span>
+    //         : 'Not Admin'}
+    //     </div>
+    //   )
+    // },
     {
       field: 'totoalPost',
       headerName: 'Total Post',
-      width: 100,
+      width: 120,
       renderCell: (params) => (
         <div>
           {params.value ? params.value : '0'}
@@ -241,7 +250,7 @@ const Users = () => {
     {
       field: 'rentSuccess',
       headerName: 'Rent Success',
-      width: 100,
+      width: 120,
       renderCell: (params) => (
         <div>
           {params.value ? params.value : '0'}
@@ -263,44 +272,52 @@ const Users = () => {
         };
 
         return (
-          <div>
-            <Button
-              style={{
-                background: 'transparent',
-                border: 'none',
-                outline: 'none',
-                cursor: 'pointer',
-                color: '#3E6EC9',
-                fontWeight: 'bold',
-                width: '10px',
-              }}
-              onClick={handleClick}
-            >
-              <MoreVertIcon />
-            </Button>
+          <div style={{position: 'relative'}}>
+            {
+              ( !selectedRows || selectedRows?.length == 0 || selectedRows?.length == 1 ) && <>
+                <Button
+                  style={{
+                    background: 'transparent',
+                    border: 'none',
+                    outline: 'none',
+                    cursor: 'pointer',
+                    color: '#3E6EC9',
+                    fontWeight: 'bold',
+                    width: '10px',
+                    display: params.row.isAdmin == true ? 'none' : 'block',
+                    
+                  }}
 
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-              style={{
-                marginLeft: '-30px',
-                boxShadow: 'none',
-              }}
-            >
-              <MenuItem onClick={() => handleClickOpen("update")}>
-                Update User
-              </MenuItem>
-              <MenuItem onClick={() => handleClickOpen("ban")}>
-                Ban User
-              </MenuItem>
-              <MenuItem onClick={() => handleClickOpen("delete")}>
-                Delete User
-              </MenuItem>
+                  // for relativity purpose
+                  disabled={selectedRows?.length == 1}
+                  onClick={handleClick}
+                >
+                  <MoreVertIcon />
+                </Button>
 
-            </Menu>
-
-
+                <Menu
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose}
+                  style={{
+                    position: 'absolute',
+                    right: '0',
+                    marginLeft: '-80px',
+                    boxShadow: 'none',
+                  }}
+                >
+                  <MenuItem onClick={() => handleClickOpen("update", `${params.row.id}`)}>
+                    Update data
+                  </MenuItem>
+                  <MenuItem onClick={() => handleClickOpen("ban")}>
+                    Ban user
+                  </MenuItem>
+                  <MenuItem onClick={() => handleClickOpen("delete")}>
+                    Delete user
+                  </MenuItem>
+                </Menu>
+              </>
+            }
           </div>
         );
       },
