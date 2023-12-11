@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import { useQuery } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import { Box, Button, IconButton, Menu, MenuItem, TextField, Switch, FormControlLabel, Tooltip } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Dialog from "@mui/material/Dialog";
@@ -14,16 +14,78 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 const Users = () => {
+  const queryClient = useQueryClient()
   const [open, setOpen] = React.useState(false);
   const [selectedAction, setSelectedAction] = React.useState("");
   const [selectedUser, setSelectedUser] = React.useState(null);
   const handleClickOpen = (action, user) => {
-    console.log(action);
-    console.log(user)
+    // console.log(action);
+    // console.log(user)
     setSelectedUser(user);
     setSelectedAction(action);
     setOpen(true);
   };
+
+  const handleBanUser = async () => {
+    console.log(selectedUser)
+    // for each selected user call ban user api
+    for (let i = 0; i < selectedRows.length; i++) {
+      const res = await axios.put(`http://localhost:5000/update-user/${selectedRows[i].id}`, {
+        "data": { isBanned: true }
+      }, {
+        headers: {
+          'Authorization': `${localStorage.getItem('jwt')}`
+        }
+      })
+      if (res.data) {
+        console.log(res.data)
+      } else {
+        alert('Something went wrong')
+      }
+    }
+    handleClose();
+    queryClient.invalidateQueries('allUsers')
+  }
+  const handleUnBanUser = async () => {
+    console.log(selectedUser)
+    // for each selected user call ban user api
+    for (let i = 0; i < selectedRows.length; i++) {
+      const res = await axios.put(`http://localhost:5000/update-user/${selectedRows[i].id}`, {
+        "data": { isBanned: false }
+      }, {
+        headers: {
+          'Authorization': `${localStorage.getItem('jwt')}`
+        }
+      })
+      if (res.data) {
+        console.log(res.data)
+      } else {
+        alert('Something went wrong')
+      }
+    }
+    handleClose();
+    queryClient.invalidateQueries('allUsers')
+  }
+  
+  const handleDeleteUser = async () => {
+    console.log(selectedUser)
+    // for each selected user call ban user api
+    for (let i = 0; i < selectedRows.length; i++) {
+      const res = await axios.delete(`http://localhost:5000/delete-user/${selectedRows[i].id}`, {
+        headers: {
+          'Authorization': `${localStorage.getItem('jwt')}`
+        }
+      })
+      if (res.data) {
+        console.log(res.data)
+      } else {
+        alert('Something went wrong')
+      }
+    }
+    handleClose();
+    setSelectedRows(null);
+    queryClient.invalidateQueries('allUsers')
+  }
 
   const handleClose = () => {
     setOpen(false);
@@ -65,7 +127,12 @@ const Users = () => {
           'Authorization': `${localStorage.getItem('jwt')}`
         }
       })
-      console.log(res.data)
+      if (res.data) {
+        console.log(res.data)
+      } else {
+        alert('Something went wrong')
+      }
+      queryClient.invalidateQueries('allUsers')
       handleClose();
     };
 
@@ -237,7 +304,7 @@ const Users = () => {
               borderRadius: '30px',
               color: 'white',
             }}>
-              Not Verified
+              Unverified
             </span>
           }
         </div>
@@ -264,8 +331,25 @@ const Users = () => {
     //   )
     // },
     {
+      field: 'isBanned',
+      headerName: 'Banned',
+      width: 150,
+      renderCell: (params) => (
+        <div>
+          {params.value == true ?
+            <span style={{ background: 'red', padding: '7px 15px', borderRadius: '30px', color: 'white' }}>
+              Banned
+            </span>
+            : <span style={{ background: 'green', padding: '7px 15px', borderRadius: '30px', color: 'white' }}>
+              Not Banned
+            </span>}
+        </div>
+      )
+    },
+    {
       field: 'totalPost',
       headerName: 'Total Post',
+      filterable: false,
       width: 120,
       renderCell: (params) => (
         <div>
@@ -276,6 +360,7 @@ const Users = () => {
     {
       field: 'rentSuccess',
       headerName: 'Rent Success',
+      filterable: false,
       width: 120,
       renderCell: (params) => (
         <div>
@@ -283,9 +368,12 @@ const Users = () => {
         </div>
       )
     },
+
     {
       width: 20,
       type: 'number',
+      // disable for filter
+      filterable: false,
       renderCell: (params) => {
         const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -303,7 +391,6 @@ const Users = () => {
               (!selectedRows || selectedRows?.length == 0 || selectedRows?.length == 1) && <>
                 <Button
                   style={{
-                    background: 'transparent',
                     border: 'none',
                     outline: 'none',
                     cursor: 'pointer',
@@ -335,10 +422,10 @@ const Users = () => {
                   <MenuItem onClick={() => handleClickOpen("update", `${params.row.id}`)}>
                     Update data
                   </MenuItem>
-                  <MenuItem onClick={() => handleClickOpen("ban", `${params.row.id}`)}>
+                  <MenuItem onClick={() => handleClickOpen("ban", `${params.row}`)}>
                     Ban user
                   </MenuItem>
-                  <MenuItem onClick={() => handleClickOpen("delete", `${params.row.id}`)}>
+                  <MenuItem onClick={() => handleClickOpen("delete", `${params.row}`)}>
                     Delete user
                   </MenuItem>
                 </Menu>
@@ -475,7 +562,7 @@ const Users = () => {
         }}>
           <Button
             variant='contained'
-            onClick={() => alert('Call delete user API here')}
+            onClick={handleDeleteUser}
             color='error'
             sx={{ cursor: 'pointer' }}
             style={{
@@ -488,7 +575,7 @@ const Users = () => {
           </Button>
           <Button
             variant='contained'
-            onClick={() => alert('Call ban user API here')}
+            onClick={handleBanUser}
             color='error'
             sx={{ cursor: 'pointer' }}
             style={{
@@ -498,6 +585,17 @@ const Users = () => {
               zIndex: 1,
             }}>
             Ban Selected Users
+          </Button>
+          <Button
+            onClick={handleUnBanUser}
+            sx={{ cursor: 'pointer' }}
+            style={{
+              position: 'absolute',
+              left: '200px',
+              top: '0',
+              zIndex: 1,
+            }}>
+            Mark unbanned Users
           </Button>
         </Box>
       }
@@ -543,10 +641,8 @@ const Users = () => {
               },
             }}
             pageSizeOptions={[5, 10]}
-            // email filter
             slots={{
               toolbar: GridToolbar,
-              // not found text
               noRowsOverlay: () => <div>No users found.</div>,
             }}
             // disable density selector and column selector
@@ -604,12 +700,12 @@ const Users = () => {
             <Box sx={{ ml: 1 }}>
               {selectedAction === "ban" && (
                 <Box>
-                  <h2>Are you sure you want to BAN this user?</h2>
+                  <h2>Are you sure you want to mark BAN this user?</h2>
                   <Box sx={{ mt: 3 }}>
                     <Button
                       variant="contained"
                       color="error"
-                      onClick={() => alert("Call disbale api here")}
+                      onClick={handleBanUser}
                     >
                       Confim BAN
                     </Button>
@@ -633,7 +729,7 @@ const Users = () => {
                     <Button
                       variant="contained"
                       color="error"
-                      onClick={() => alert("Call disbale api here")}
+                      onClick={handleDeleteUser}
                     >
                       Confirm DELETE
                     </Button>
