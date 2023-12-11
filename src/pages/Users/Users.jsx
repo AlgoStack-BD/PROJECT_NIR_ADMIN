@@ -7,6 +7,7 @@ import Dialog from "@mui/material/Dialog";
 import CloseIcon from "@mui/icons-material/Close";
 import Slide from "@mui/material/Slide";
 import styles from '../../assets/css/users.module.css'
+import axios from 'axios';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -27,109 +28,134 @@ const Users = () => {
   const handleClose = () => {
     setOpen(false);
   };
-  
-const UpdateUserForm = ({ handleClose }) => {
-  const selectedUserId = selectedUser ? selectedUser : selectedRows[selectedRows.length - 1].id;
 
-  const [formData, setFormData] = useState({
-    id: selectedUserId,
-    name: '',
-    // email: '',
-    // password: '',
-    phone: '',
-    isVerified: true,
-    image: '',
-    location: '',
-    totalPost: 0,
-    rentSuccess: 0,
-    isAdmin: false,
-  });
+  const UpdateUserForm = ({ handleClose }) => {
+    const selectedUserId = selectedUser ? selectedUser : selectedRows[selectedRows.length - 1].id;
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+    const [formData, setFormData] = useState({
+      name: selectedRows[0].user,
+      phone: selectedRows[0].phone,
+      isVerified: selectedRows[0].isVerified,
+      image: selectedRows[0].image,
+      location: selectedRows[0].location,
+      totalPost: selectedRows[0].totalPost,
+      rentSuccess: selectedRows[0].rentSuccess,
+    });
+
+    const handleChange = (e) => {
+      const { name, value } = e.target;
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    };
+    const handleToggleChange = (e) => {
+      setFormData((prevData) => ({
+        ...prevData,
+        isVerified: e.target.checked,
+      }));
+    };
+
+    const handleSubmit = async () => {
+      JSON.stringify(formData)
+      const res = await axios.put(`http://localhost:5000/update-user/${selectedUserId}`, {
+        "data": formData
+      }, {
+        headers: {
+          'Authorization': `${localStorage.getItem('jwt')}`
+        }
+      })
+      console.log(res.data)
+      handleClose();
+    };
+
+    return (
+      <Box>
+        <h2>UPDATE USER DETAILS</h2>
+        <form>
+          <TextField
+            label="Name"
+            name="name"
+            placeholder='Enter name'
+            value={formData.name}
+            onChange={handleChange}
+            fullWidth
+            sx={{ mt: 2 }}
+          />
+          <TextField
+            label="Phone"
+            name="phone"
+            placeholder='Enter number'
+            type='number'
+            value={formData.phone}
+            onChange={handleChange}
+            fullWidth
+            sx={{ mt: 2 }}
+          />
+          <TextField
+            label="Location"
+            name="location"
+            placeholder='Enter your location'
+            value={formData.location}
+            onChange={handleChange}
+            fullWidth
+            // value can not be less than 0
+            sx={{ mt: 2 }}
+          />
+          <FormControlLabel
+            control={
+              <Switch
+                checked={formData.isVerified}
+                onChange={handleToggleChange}
+                name="isVerified"
+                color="primary"
+              />
+            }
+            label="Is Verified"
+            sx={{ mt: 2 }}
+          />
+          {/* dropdown for total post */}
+          <TextField
+            label="Total Post"
+            name="totalPost"
+            placeholder='Enter total post'
+            type='number'
+            value={formData.totalPost}
+            onChange={handleChange}
+            fullWidth
+            InputProps={{ inputProps: { min: 0 } }}
+            sx={{ mt: 2 }}
+          />
+          {/* dropdown for rent success */}
+          <TextField
+            label="Rent Success"
+            name="rentSuccess"
+            placeholder='Enter rent success'
+            type='number'
+            value={formData.rentSuccess}
+            onChange={handleChange}
+            fullWidth
+            InputProps={{ inputProps: { min: 0 } }}
+            sx={{ mt: 2 }}
+          />
+          {/* Add other fields as needed */}
+          <Box sx={{ mt: 3 }}>
+            <Button variant="contained" color="success" onClick={handleSubmit}>
+              Confirm update
+            </Button>
+            <Button
+              variant="contained"
+              color="error"
+              sx={{ ml: 2 }}
+              onClick={handleClose}
+            >
+              Cancel
+            </Button>
+          </Box>
+        </form>
+      </Box>
+    );
   };
-  const handleToggleChange = (e) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      isVerified: e.target.checked,
-    }));
-  };
-
-  const handleSubmit = () => {
-    // Call your API to update user details with formData
-    // e.g., updateUser(formData);
-    
-    // axios.put(`http://localhost:5000/update-user/64d160010bfc7deeb54d522b`, P)
-    alert('Call disable API here with updated data: ' + JSON.stringify(formData));
-    handleClose();
-  };
-
-  return (
-    <Box>
-      <h2>UPDATE USER DETAILS</h2>
-      <form>
-        <TextField
-          label="Name"
-          name="name"
-          placeholder='Enter name'
-          value={formData.name}
-          onChange={handleChange}
-          fullWidth
-          sx={{ mt: 2 }}
-        />
-        <TextField
-          label="Phone"
-          name="phone"
-          placeholder='Enter number'
-          type='number'
-          value={formData.phone}
-          onChange={handleChange}
-          fullWidth
-          sx={{ mt: 2 }}
-        />
-        <TextField
-          label="Location"
-          name="location"
-          placeholder='Enter your location'
-          value={formData.location}
-          onChange={handleChange}
-          fullWidth
-          sx={{ mt: 2 }}
-        />
-        <FormControlLabel
-          control={
-            <Switch
-              checked={formData.isVerified}
-              onChange={handleToggleChange}
-              name="isVerified"
-              color="primary"
-            />
-          }
-          label="Is Verified"
-          sx={{ mt: 2 }}
-        />
-        {/* Add other fields as needed */}
-        <Box sx={{ mt: 3 }}>
-          <Button variant="contained" color="success" onClick={handleSubmit}>
-            Confirm update
-          </Button>
-          <Button
-            variant="contained"
-            color="error"
-            sx={{ ml: 2 }}
-            onClick={handleClose}
-          >
-            Cancel
-          </Button>
-        </Box>
-      </form>
-    </Box>
-  );
-};
   const columns = [
     // {
     //   field: 'id',
@@ -238,12 +264,12 @@ const UpdateUserForm = ({ handleClose }) => {
     //   )
     // },
     {
-      field: 'totoalPost',
+      field: 'totalPost',
       headerName: 'Total Post',
       width: 120,
       renderCell: (params) => (
         <div>
-          {params.value ? params.value : '0'}
+          {params.value ? params.row.totalPost : '0'}
         </div>
       )
     },
@@ -253,7 +279,7 @@ const UpdateUserForm = ({ handleClose }) => {
       width: 120,
       renderCell: (params) => (
         <div>
-          {params.value ? params.value : '0'}
+          {params.value ? params.row.rentSuccess : '0'}
         </div>
       )
     },
@@ -272,9 +298,9 @@ const UpdateUserForm = ({ handleClose }) => {
         };
 
         return (
-          <div style={{position: 'relative'}}>
+          <div style={{ position: 'relative' }}>
             {
-              ( !selectedRows || selectedRows?.length == 0 || selectedRows?.length == 1 ) && <>
+              (!selectedRows || selectedRows?.length == 0 || selectedRows?.length == 1) && <>
                 <Button
                   style={{
                     background: 'transparent',
@@ -285,7 +311,7 @@ const UpdateUserForm = ({ handleClose }) => {
                     fontWeight: 'bold',
                     width: '10px',
                     display: params.row.isAdmin == true ? 'none' : 'block',
-                    
+
                   }}
 
                   // for relativity purpose
@@ -309,10 +335,10 @@ const UpdateUserForm = ({ handleClose }) => {
                   <MenuItem onClick={() => handleClickOpen("update", `${params.row.id}`)}>
                     Update data
                   </MenuItem>
-                  <MenuItem onClick={() => handleClickOpen("ban")}>
+                  <MenuItem onClick={() => handleClickOpen("ban", `${params.row.id}`)}>
                     Ban user
                   </MenuItem>
-                  <MenuItem onClick={() => handleClickOpen("delete")}>
+                  <MenuItem onClick={() => handleClickOpen("delete", `${params.row.id}`)}>
                     Delete user
                   </MenuItem>
                 </Menu>
@@ -355,6 +381,7 @@ const UpdateUserForm = ({ handleClose }) => {
     totalPost: user.totalPost,
     rentSuccess: user.rentSuccess,
     isAdmin: user.isAdmin,
+    isBanned: user.isBanned,  // Add this field
   })) : [];
 
   const [selectedRows, setSelectedRows] = useState(null);
@@ -577,14 +604,14 @@ const UpdateUserForm = ({ handleClose }) => {
             <Box sx={{ ml: 1 }}>
               {selectedAction === "ban" && (
                 <Box>
-                  <h2>Are you sure you want to DISABLE this user?</h2>
+                  <h2>Are you sure you want to BAN this user?</h2>
                   <Box sx={{ mt: 3 }}>
                     <Button
                       variant="contained"
                       color="error"
                       onClick={() => alert("Call disbale api here")}
                     >
-                      Confim Disable
+                      Confim BAN
                     </Button>
                     <Button
                       variant="contained"
@@ -592,7 +619,7 @@ const UpdateUserForm = ({ handleClose }) => {
                       sx={{ ml: 2 }}
                       onClick={handleClose}
                     >
-                      Do not disable
+                      Do not BAN
                     </Button>
                   </Box>
                 </Box>
