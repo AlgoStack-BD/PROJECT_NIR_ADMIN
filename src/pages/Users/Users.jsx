@@ -66,7 +66,7 @@ const Users = () => {
     handleClose();
     queryClient.invalidateQueries('allUsers')
   }
-  
+
   const handleDeleteUser = async () => {
     console.log(selectedUser)
     // for each selected user call ban user api
@@ -546,11 +546,11 @@ const Users = () => {
       {/* creater new user */}
       <Button
         variant='contained'
-        onClick={() => alert('Call create user API here')}
+        onClick={() => window.open('https://stackoverflow.com', '_blank')}
         sx={{ background: '#0D55DF', color: '#fff', cursor: 'pointer' }}
         style={{
           position: 'absolute',
-          right: '10px',
+          right: '20px',
           top: '0',
           zIndex: 1,
         }}>

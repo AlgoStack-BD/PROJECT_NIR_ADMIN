@@ -27,7 +27,7 @@ const MakeAdmin = () => {
 
     if (error) return 'Internal server error: ' + error.message;
 
-    const filteredUsers = data.data.filter(user => user.isAdmin === false);
+    const filteredUsers = data?.data?.filter(user => user.isAdmin === false);
 
     const handleMakeAdmin = async () => {
 

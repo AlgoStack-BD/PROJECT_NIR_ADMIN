@@ -47,7 +47,7 @@ const DashboardPage = () => {
   // Function to get the count of new users who joined in the last 24 hours
   const getNewUsersCountInLast24Hours = () => {
     if (Array.isArray(allUsers)) {
-      return allUsers.filter(user => isWithinLast24Hours(dateFromObjectId(user._id))).length;
+      return allUsers?.filter(user => isWithinLast24Hours(dateFromObjectId(user._id))).length;
     }
     return 0;
   };
@@ -55,7 +55,7 @@ const DashboardPage = () => {
   // Function for getting the count of unverified users
   const getUnverifiedUsersCount = () => {
     if (Array.isArray(allUsers)) {
-      return allUsers.filter(user => !user.isVerified).length;
+      return allUsers?.filter(user => !user.isVerified).length;
     }
     return 0;
   };
