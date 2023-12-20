@@ -7,10 +7,15 @@ import revenue from '../../assets/img/dashboard/revenue.svg'
 import styles from '../../assets/css/dashboard.module.css'
 import { Box, Grid } from '@mui/material'
 import { useQuery } from 'react-query'
-import { ResponsiveContainer, PieChart, Pie, Legend } from 'recharts';
+import { ResponsiveContainer, PieChart, Pie, Legend, BarChart, Bar, XAxis, YAxis, Tooltip, } from 'recharts';
 
 
 const DashboardPage = () => {
+  const [selectedYear, setSelectedYear] = React.useState(2023);
+  const handleYearSelection = (e) => {
+    setSelectedYear(e.target.value);
+    // alert(e.target.value);
+  }
 
   const { data: allUsers, loading, error } = useQuery('allUsers', () => fetch('http://localhost:5000/all-users', {
     headers: {
@@ -55,6 +60,28 @@ const DashboardPage = () => {
     return 0;
   };
 
+  const TinyBarChart = () => {
+    const data = [
+      { name: 'Jan', value: 100 },
+      { name: 'Feb', value: 200 },
+      { name: 'Mar', value: 150 },
+      { name: 'Apr', value: 300 },
+      { name: 'May', value: 250 },
+      { name: 'Jun', value: 180 },
+    ];
+
+    return (
+      <ResponsiveContainer width="100%" height={350}>
+        <BarChart data={data} style={{ padding: "20px" }}>
+          <XAxis dataKey="name" />
+          <YAxis />
+          <Tooltip />
+          <Bar dataKey="value" fill="#8884d8" />
+        </BarChart>
+      </ResponsiveContainer>
+    );
+  };
+
   // cards on top of the dashboard
   const CardParent = () => {
     return <Grid container spacing={2} sx={{ mt: 1 }}>
@@ -83,14 +110,46 @@ const DashboardPage = () => {
   return (
     <Box sx={{ px: { xs: 1, md: 5 } }}>
       <CardParent />
-      <div style={{ width: '47%', height: 400 , background: '#f9f9f9', padding: '20px', marginTop: '20px', borderRadius: '10px'}}>
-        <h3>User Visual Chart</h3>
-        <ResponsiveContainer>
-          <PieChart>
-            <Pie dataKey="value" data={data} fill="#8884d8" label />
-          </PieChart>
-        </ResponsiveContainer>
-      </div>
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={6} sx={{ height: 600, marginTop: '20px' }}>
+          <div style={{ height: '400px', width: '100%', background: '#f9f9f9', padding: '20px', borderRadius: '10px' }}>
+            <h3>User Visual Chart</h3>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: "10px" }}>
+              <p>Total user: {allUsers ? allUsers?.length : 0}</p>
+              <p>New user: {getNewUsersCountInLast24Hours()}</p>
+              <p>Unvarified user: {getUnverifiedUsersCount()}</p>
+            </div>
+            <ResponsiveContainer style={{ paddingBottom: "30px" }}>
+              <PieChart >
+                <Pie
+                  dataKey="value"
+                  data={data}
+                  fill="#8884d8"
+                  label
+                />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <div style={{ height: 400, background: '#f9f9f9', padding: '20px', marginTop: '20px', borderRadius: '10px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: "center" }}>
+              <h3>Revenue Generation Chart</h3>
+              {/* button for selecting year */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: "10px" }}>
+                <p>Year</p>
+                <select name="year" onChange={handleYearSelection}>
+                  {
+                    [2023, 2022].map(year => <option value={year} >{year}</option>)
+                  }
+                </select>
+              </div>
+            </div>
+            <TinyBarChart />
+          </div>
+        </Grid>
+      </Grid>
+
     </Box>
   )
 }

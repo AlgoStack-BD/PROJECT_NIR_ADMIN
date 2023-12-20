@@ -9,7 +9,6 @@
     text-align: center;
     gap: 30px;
     max-width: 400px;
-    min-width: 200px;
 }
 
 .number {
@@ -22,4 +21,24 @@
     font-size: 15px;
     font-style: normal;
     font-weight: 500;
+}
+
+.info{
+    box-shadow: 0px 0px 10px 1px rgba(144, 144, 144, 0.2);
+    width: 100%;
+}
+
+select{
+    width: 100%;
+    border-radius: 5px;
+    border: 1px solid #CCC;
+    padding: 0 10px;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 500;
+    margin-left: 10px;
+}
+
+select:focus{
+    outline: none;
 }
