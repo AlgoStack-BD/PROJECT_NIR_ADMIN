@@ -550,7 +550,7 @@ const Users = () => {
         sx={{ background: '#0D55DF', color: '#fff', cursor: 'pointer' }}
         style={{
           position: 'absolute',
-          right: '20px',
+          right: '10px',
           top: '0',
           zIndex: 1,
         }}>
