@@ -3,9 +3,13 @@ import styles from '../../assets/css/pendingPost.module.css';
 import { FaLocationDot } from "react-icons/fa6";
 import { FaTags } from "react-icons/fa6";
 import { MdOutlineAttachMoney } from "react-icons/md";
+import { useQuery, useQueryClient } from 'react-query';
+import axios from 'axios';
 
 const PendingPost = () => {
-  const DataComponent = ({ name, date, location, text, bedroom, drawingroom, diningroom, kitchen, belcony, bathroom, isNagoitable, price, withFurniture, img}) => {
+  const queryClient = useQueryClient();
+
+  const DataComponent = ({ name, date, location, text, bedroom, drawingroom, diningroom, kitchen, belcony, bathroom, isNagoitable, price, withFurniture, img, id }) => {
     return (
       <div className={styles.infoContainer}>
         {/* user info */}
@@ -87,34 +91,98 @@ const PendingPost = () => {
         </div>
         {/* approve or ban post */}
         <div className={styles.approveOrBan}>
-          <button className={styles.approve}>Approve</button>
-          <button className={styles.ban}>Ban</button>
+          <button className={styles.approve} onClick={() => handleApprovePost(id)}>Approve</button>
+          <button className={styles.ban} onClick={() => handleDeclinePost(id)}>Decline</button>
         </div>
       </div>
     )
   }
 
+  const { isLoading: pendingPostLoading, error, data: pendingPosts } = useQuery('pendingPosts', () =>
+    fetch('http://localhost:5000/pending-posts', {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `${localStorage.getItem('jwt')}`
+      }
+    })
+      .then(res => res.json())
+  );
+
+  const handleApprovePost = async (id) => {
+    const data = {
+      data: {
+        isApproved: true
+      }
+    }
+    JSON.stringify(data)
+    const res = await axios.put(`http://localhost:5000/update-post/${id}`, data, {
+      headers: {
+        'Authorization': `${localStorage.getItem('jwt')}`
+      }
+    })
+    // console.log(res)
+    if(res.data.status == 200){
+      alert('Post approved')
+    }else{
+      alert('Something went wrong, try again')
+    }
+    queryClient.invalidateQueries('pendingPosts')
+  }
+  
+  // dedline post
+  const handleDeclinePost = async (id) => {
+    const data = {
+      data: {
+        isApproved: false
+      }
+    }
+    JSON.stringify(data)
+    const res = await axios.put(`http://localhost:5000/update-post/${id}`, data, {
+      headers: {
+        'Authorization': `${localStorage.getItem('jwt')}`
+      }
+    })
+    // console.log(res)
+    if(res.data.status == 200){
+      alert('Post declined')
+    }else{
+      alert('Something went wrong, try again')
+    }
+    queryClient.invalidateQueries('pendingPosts')
+  }
+
+  // main return
   return (
     <div className={styles.container}>
       <p className={styles.heading}>Number of pending post - 1</p>
       <hr className={styles.hr} />
-      <DataComponent
-        name="Mahinur Rahman"
-        date="12/12/2021"
-        location="Rajnagar, Moulvibazar"
-        text="I am looking for a house which will have to have as i required. hope to find my excepted house to from here."
-        bedroom="3"
-        drawingroom="1"
-        diningroom="1"
-        kitchen="1"
-        belcony="1"
-        bathroom="2"
-        isNagoitable={true}
-        withFurniture={true}
-        price="12000"
-        img="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Flag_of_Bangladesh.svg/383px-Flag_of_Bangladesh.svg.png, https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Flag_of_Bangladesh.svg/383px-Flag_of_Bangladesh.svg.png, https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Flag_of_Bangladesh.svg/383px-Flag_of_Bangladesh.svg.png, https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Flag_of_Bangladesh.svg/383px-Flag_of_Bangladesh.svg.png"
-      />
-
+      {
+        pendingPostLoading ? 'Loading...' : pendingPosts?.data?.map((item, index) => {
+          return (
+            <DataComponent
+              id={item?._id}
+              key={index}
+              name={item?.userName}
+              date={item?.createdAt}
+              location={item?.location}
+              text={item?.additionalMessage}
+              bedroom={item?.bedRoom}
+              drawingroom={item?.drawingRoom}
+              diningroom={item?.diningRoom}
+              kitchen={item?.kitchen}
+              belcony={item?.balcony}
+              bathroom={item?.bathRoom}
+              isNagoitable={item?.isNegotiable}
+              withFurniture={item?.withFurniture}
+              price={item?.price}
+              img={item?.img}
+            />
+          )
+        })
+      }
+      {
+        error && 'Something went wrong'
+      }
     </div>
   )
 }
