@@ -10,13 +10,30 @@ const PendingPost = () => {
   const queryClient = useQueryClient();
 
   const DataComponent = ({ name, date, location, text, bedroom, drawingroom, diningroom, kitchen, belcony, bathroom, isNagoitable, price, withFurniture, img, id }) => {
+
+    const dateObject = new Date(date);
+
+    // Extracting components
+    const year = dateObject.getFullYear();
+    // Months are zero-based, so added 1
+    const month = dateObject.getMonth() + 1; 
+    const day = dateObject.getDate();
+    const hours = dateObject.getHours();
+    const minutes = dateObject.getMinutes();
+    const seconds = dateObject.getSeconds();
+
     return (
       <div className={styles.infoContainer}>
         {/* user info */}
         <div className={styles.userInfo}>
           <img src={`https://img.freepik.com/free-photo/fashion-boy-with-yellow-jacket-blue-pants_71767-96.jpg?w=740&t=st=1703610053~exp=1703610653~hmac=7c8f34e70e29602ea130eb5464c999f10d318f8f39e0fd5fb29b2b7f5bdac077`} alt="img" style={{ width: '40px', height: "40px", borderRadius: "50%" }} />
           <div className={styles.userInfoText}>
-            <p className={styles.userName}>{name}  <span className={styles.date}>({date})</span></p>
+            <p className={styles.userName}>{name}  <span className={styles.date}>{
+              // date.split('T')[0]
+              'Date: ' + day + '/' + month + '/' + year + ' | Time: ' + hours + ':' + minutes + ':' + seconds
+              // time also can be shown from
+
+            }</span></p>
             <p className={styles.userLocation}>
               <FaLocationDot />
               <span className={styles.userLocationText}>{location}</span>
@@ -121,14 +138,14 @@ const PendingPost = () => {
       }
     })
     // console.log(res)
-    if(res.data.status == 200){
+    if (res.data.status == 200) {
       alert('Post approved')
-    }else{
+    } else {
       alert('Something went wrong, try again')
     }
     queryClient.invalidateQueries('pendingPosts')
   }
-  
+
   // dedline post
   const handleDeclinePost = async (id) => {
     const data = {
@@ -143,9 +160,9 @@ const PendingPost = () => {
       }
     })
     // console.log(res)
-    if(res.data.status == 200){
+    if (res.data.status == 200) {
       alert('Post declined')
-    }else{
+    } else {
       alert('Something went wrong, try again')
     }
     queryClient.invalidateQueries('pendingPosts')
