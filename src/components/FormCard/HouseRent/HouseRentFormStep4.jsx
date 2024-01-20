@@ -140,7 +140,7 @@ const HouseRentFormStep4 = ({ formData, onSubmit }) => {
                 margin="normal"
             />
             <TextField
-                label="Image"
+                label="User Image"
                 value={userImg}
                 onChange={(e) => setUserImg(e.target.value)}
                 fullWidth
