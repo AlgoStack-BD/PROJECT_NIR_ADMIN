@@ -32,7 +32,7 @@ const HouseRentFormStep1 = ({ formData, onNext }) => {
             />
             <TextField
                 required
-                label="Name"
+                label="User name"
                 value={userName}
                 onChange={(e) => setUserName(e.target.value)}
                 fullWidth
