@@ -6,13 +6,34 @@ const HouseRentFormStep4 = ({ formData, onSubmit }) => {
     const [img, setImg] = useState(formData.img);
     const [price, setPrice] = useState(formData.price);
     const [isPublicNumber, setIsPublicNumber] = useState(formData.isPublicNumber);
+    const [fileNames, setFileNames] = useState(formData.img || []); // Initialize with existing filenames if available
     // const [isSold, setIsSold] = useState(formData.isSold);
     const [hasError, setHasError] = useState(false);
     const [userImg, setUserImg] = useState('');
+
+    const handleFileUpload = async (e) => {
+        const formData = new FormData();
+
+        for (let i = 0; i < e.target.files.length; i++) {
+            formData.append('files', e.target.files[i]);
+        }
+
+        try {
+            const response = await axios.post('http://localhost:5000/upload', formData);
+            const { message, fileNames } = response.data;
+
+            console.log(`File upload success: ${message}`);
+            setFileNames(fileNames);
+        } catch (error) {
+            console.error('Error uploading files:', error);
+            // Handle error as needed
+        }
+    };
+
+
     const handleSubmission = async () => {
 
         if (
-            !img ||
             !price ||
             !formData.location ||
             !formData.type ||
@@ -24,6 +45,19 @@ const HouseRentFormStep4 = ({ formData, onSubmit }) => {
             formData.bills.electricBill === undefined ||
             formData.bills.waterBill === undefined
         ) {
+            console.log(
+                'Missing required fields:',
+                !price,
+                !formData.location,
+                !formData.type,
+                formData.isNegotiable === undefined,
+                !formData.bedRoom,
+                !formData.bathRoom,
+                !formData.kitchen,
+                formData.bills.gasBill === undefined,
+                formData.bills.electricBill === undefined,
+                formData.bills.waterBill === undefined
+            )
             setHasError(true);
             return;
         }
@@ -45,7 +79,7 @@ const HouseRentFormStep4 = ({ formData, onSubmit }) => {
                 diningRoom: formData.diningRoom,
                 balcony: formData.balcony,
                 bills: formData.bills,
-                img,
+                img: fileNames.join(','),
                 price,
                 additionalMessage: formData.additionalMessage,
                 likeCount: 0,
@@ -74,13 +108,29 @@ const HouseRentFormStep4 = ({ formData, onSubmit }) => {
 
     return (
         <div>
-            <TextField
+            <input
+                type="file"
+                accept="image/*"
+                onChange={handleFileUpload}
+                multiple  // Allow multiple file selection
+                style={{ marginBottom: '10px' }}
+            />
+            {fileNames.length > 0 && (
+                <TextField
+                    label="Images (Uploaded)"
+                    value={fileNames.join(', ')}
+                    fullWidth
+                    margin="normal"
+                    disabled
+                />
+            )}
+            {/* <TextField
                 label="Images (Comma-separated URLs)"
                 value={img}
                 onChange={(e) => setImg(e.target.value)}
                 fullWidth
                 margin="normal"
-            />
+            /> */}
             <TextField
                 label="Price"
                 type="number"
