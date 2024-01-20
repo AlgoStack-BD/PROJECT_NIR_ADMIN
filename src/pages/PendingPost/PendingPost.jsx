@@ -16,7 +16,7 @@ const PendingPost = () => {
     // Extracting components
     const year = dateObject.getFullYear();
     // Months are zero-based, so added 1
-    const month = dateObject.getMonth() + 1; 
+    const month = dateObject.getMonth() + 1;
     const day = dateObject.getDate();
     const hours = dateObject.getHours();
     const minutes = dateObject.getMinutes();
@@ -101,7 +101,12 @@ const PendingPost = () => {
           {
             img && img.split(',').map((item, index) => {
               return (
-                <img src={item} alt="img" key={index} />
+                <img src={
+                  item.startsWith('http') ? item : `http://localhost:5000/uploads/${item}`
+                } alt="img"
+                  key={index}
+                  style={{ objectFit: 'contain', backgroundRepeat: 'no-repeat' ,  width: '300px', height: '300px', borderRadius: '10px' }}
+                />
               )
             })
           }
@@ -171,7 +176,7 @@ const PendingPost = () => {
   // main return
   return (
     <div className={styles.container}>
-      <p className={styles.heading}>Number of pending post - 1</p>
+      <p className={styles.heading}>Number of pending post - {pendingPosts?.data?.length}</p>
       <hr className={styles.hr} />
       {
         pendingPostLoading ? 'Loading...' : pendingPosts?.data?.map((item, index) => {
