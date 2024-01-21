@@ -61,8 +61,8 @@ const HouseRentFormStep4 = ({ formData, onSubmit }) => {
             setHasError(true);
             return;
         }
-
-
+        // Convert array to string
+        const type = formData?.type.join(',');
         const postData = {
             data: {
                 userId: localStorage.getItem('userId'),
@@ -70,7 +70,7 @@ const HouseRentFormStep4 = ({ formData, onSubmit }) => {
                 userName: formData.userName,
                 phone: '01778287079',
                 userImg: userImg,
-                type: formData.type,
+                type: type,
                 isNegotiable: formData.isNegotiable,
                 bedRoom: formData.bedRoom,
                 bathRoom: formData.bathRoom,
