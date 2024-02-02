@@ -10,22 +10,36 @@ import TotalRevenue from '../pages/TotalRevenue/TotalRevenue';
 import Profile from '../pages/Profile/Profile';
 import PrivateRoute from './PrivateRoute';
 import ErrorPage from '../pages/ErrorPage/ErrorPage';
+import Success from '../pages/Payment/Success';
+import Fail from '../pages/Payment/Fail';
+import Process from '../pages/Payment/Process';
 // import ProtectedRoute from './ProtectedRoute';
 
 const routes = createBrowserRouter([
     {
         path: '/',
         element: <Login />,
-        children: [
-            {
-                path: '/',
-                element: <Login />,
-            },
-            {
-                path: '/login',
-                element: <Login />,
-            },
-        ],
+        errorElement: <ErrorPage />
+    },
+    {
+        path: '/login',
+        element: <Login />,
+        errorElement: <ErrorPage />
+    },
+    {
+        path: '/process-payment',
+        element: <Process />,
+        errorElement: <ErrorPage />
+    },
+    {
+        path: '/payment-success',
+        element: <Success />,
+        errorElement: <ErrorPage />
+    },
+    {
+        path: '/payment-fail',
+        element: <Fail />,
+        errorElement: <ErrorPage />
     },
     {
         path: '/dashboard',

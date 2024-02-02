@@ -188,7 +188,7 @@ export default function MiniDrawer() {
                         <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                             {/* <img src={nirLogo} alt="avater" style={{ height: '30px', width: '30px', borderRadius: '50%' }} /> */}
                             <Typography variant="h6" noWrap component="div" sx={{ fontWeight: 600, ml: 1 }}>
-                                {user.name}
+                                {user?.name}
                             </Typography>
                         </Box>
 
