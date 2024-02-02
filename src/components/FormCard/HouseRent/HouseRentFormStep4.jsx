@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { TextField, Checkbox, FormControlLabel, Button } from '@mui/material';
 import axios from 'axios';
+import { AuthContext } from '../../../provider/AuthProvider';
 
 const HouseRentFormStep4 = ({ formData, onSubmit }) => {
+    const { showForm } = useContext(AuthContext)
+    console.log(showForm)
     const [img, setImg] = useState(formData.img);
     const [price, setPrice] = useState(formData.price);
     const [isPublicNumber, setIsPublicNumber] = useState(formData.isPublicNumber);
@@ -89,7 +92,12 @@ const HouseRentFormStep4 = ({ formData, onSubmit }) => {
                 isAdminPost: false,
             },
         };
-
+        if (showForm === 'advertising') {
+            postData.data.isAds = true;
+        }else{
+            postData.data.isAds = false;
+        }
+        
         axios.post('http://localhost:5000/create-post', postData, {
             headers: {
                 'Content-Type': 'application/json',

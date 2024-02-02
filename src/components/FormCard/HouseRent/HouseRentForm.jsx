@@ -7,7 +7,7 @@ import HouseRentFormStep4 from './HouseRentFormStep4';
 
 const steps = ['Required Information', 'Additional Details', 'Billing Information', 'Submission Step'];
 
-const HouseRentForm = () => {
+const HouseRentForm = ({ type }) => {
     const [activeStep, setActiveStep] = useState(0);
     const [formData, setFormData] = useState({
         location: '',
@@ -28,7 +28,7 @@ const HouseRentForm = () => {
         },
         additionalMessage: '',
     });
-
+    
     const handleNext = (stepData) => {
         setFormData((prevData) => ({ ...prevData, ...stepData }));
         setActiveStep((prevStep) => prevStep + 1);
@@ -55,6 +55,19 @@ const HouseRentForm = () => {
 
     return (
         <div style={{ width: '90%' }}>
+            <div style={{
+                position: 'absolute',
+                zIndex: 1,
+                backgroundColor: '#fff',
+                top: '10px',
+                left: '-30px',
+                rotate: '-40deg',
+            }}>
+                {
+                    type === 'house_rent' ? <h2>House Rent</h2> : <h2 style={{marginLeft: '-10px'}}>Premium Post</h2>
+                }
+            </div>
+
             <Stepper activeStep={activeStep} alternativeLabel>
                 {steps.map((label) => (
                     <Step key={label}>
@@ -64,26 +77,18 @@ const HouseRentForm = () => {
             </Stepper>
             <div>
                 {activeStep === steps.length ? (
-                    <div style={{margin: '20px auto', width: '100%'}}>
+                    <div style={{ margin: '20px auto', width: '100%' }}>
                         <p>Congratulations.. Post added to database</p>
-                        {/* <pre>{JSON.stringify(formData, null, 2)}</pre> */}
                     </div>
                 ) : (
                     <div>{getStepContent(activeStep)}</div>
                 )}
                 <div>
                     {activeStep !== 0 && (
-                        <Button variant="outlined" color="primary" onClick={handleBack} sx={{ width: "100%", mt:1 }}>
+                        <Button variant="outlined" color="primary" onClick={handleBack} sx={{ width: "100%", mt: 1 }}>
                             Back
                         </Button>
                     )}
-                    {/* <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={() => setActiveStep(steps.length)}
-                    >
-                        {activeStep === steps.length - 1 && 'Review Data'}
-                    </Button> */}
                 </div>
             </div>
         </div>

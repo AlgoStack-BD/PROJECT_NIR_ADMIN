@@ -15,14 +15,11 @@ const FormCard = ({ text }) => {
       }
       {
         text == 'house rent' &&
-        <HouseRentForm />
+        <HouseRentForm type={'house_rent'} />
       }
       {
         text == 'advertising' &&
-        <div style={{display: 'flex', justifyContent:"center", alignItems: "center", flexDirection: 'column'}}>
-          <HouseRentForm />
-          <p style={{padding: '0 20px'}}>Will make some changes internally to make it work for advertising</p>
-        </div>
+        <HouseRentForm type={'advertising'} />
       }
     </div>
   )

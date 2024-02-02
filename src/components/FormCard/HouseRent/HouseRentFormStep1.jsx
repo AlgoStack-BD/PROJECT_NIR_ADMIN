@@ -8,7 +8,7 @@ const HouseRentFormStep1 = ({ formData, onNext }) => {
     const [isNegotiable, setIsNegotiable] = useState(formData.isNegotiable || false);
     const [bedRoom, setBedRoom] = useState(formData.bedRoom);
     const [bathRoom, setBathRoom] = useState(formData.bathRoom);
-
+    
     const handleNext = () => {
         onNext({
             location,
