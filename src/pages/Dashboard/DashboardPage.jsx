@@ -17,17 +17,35 @@ const DashboardPage = () => {
     // alert(e.target.value);
   }
 
-  const { data: allUsers, loading, error } = useQuery('allUsers', () => fetch('http://localhost:5000/all-users', {
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `${localStorage.getItem('jwt')}`
-    }
-  })
-    .then(res => res.json())
-    // return response.data 
-    .then(data => data.data)
-
+  const { data: allUsers, loading, error } = useQuery('allUsers',
+    () => fetch('http://localhost:5000/all-users', {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `${localStorage.getItem('jwt')}`
+      }
+    })
+      .then(res => res.json())
+      // return response.data 
+      .then(data => data.data)
   );
+
+  
+
+  // get all subscribtion and revenue data
+  const { data: allSubscribtion, loading: subscribtionLoading, error: subscribtionError } = useQuery('allSubscribtion',
+    () => fetch('http://localhost:5000/all-subscriptions', {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `${localStorage.getItem('jwt')}`
+      }
+    })
+      .then(res => res.json())
+      // return response.data
+      .then(data => data.data)
+  );
+
+  console.log(allSubscribtion, subscribtionLoading, subscribtionError)
+
   // console.log(allUsers)
   if (loading) return 'Loading...';
   if (error) return 'Error...';
@@ -95,7 +113,7 @@ const DashboardPage = () => {
         <Card text={'Unverified User'} number={getUnverifiedUsersCount()} icon={pendingUser} />
       </Grid>
       <Grid item xs={12} md={3}>
-        <Card text={'Revenue'} number={0} icon={revenue} />
+        <Card text={'Revenue'} number={allSubscribtion?.length * 20} icon={revenue} />
       </Grid>
     </Grid>
 
