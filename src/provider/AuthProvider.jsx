@@ -6,7 +6,7 @@ export const AuthContext = React.createContext(null);
 const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [showForm, setShowForm] = useState('');
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [token, setToken] = useState(localStorage.getItem('jwt') || '');
     const [userId, setUserId] = useState(localStorage.getItem('userId') || '');
 

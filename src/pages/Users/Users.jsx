@@ -240,11 +240,19 @@ const Users = () => {
       width: 200,
       renderCell: (params) => (
         <Tooltip title={params.row.user} style={{ display: 'flex', alignItems: 'center' }}>
-          <img
-            style={{ height: 35, width: 35, borderRadius: '50%', marginRight: 10 }}
-            src={`http://localhost:5000/uploads/` + params.row.image}  // Access params.row.image instead of params.value.image
-          // alt="user-image"
-          />
+          {
+            params.row.image ? <img
+              style={{ height: 35, width: 35, borderRadius: '50%', marginRight: 10 }}
+              src={`http://localhost:5000/uploads/` + params.row.image}  // Access params.row.image instead of params.value.image
+            // alt="user-image"
+            /> :
+              <img
+                style={{ height: 35, width: 35, borderRadius: '50%', marginRight: 10 }}
+                src="https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"
+                alt="user-image"
+              />
+          }
+
           <div>
             {params.row.user}  {/* Access params.row.user instead of params.value */}
           </div>

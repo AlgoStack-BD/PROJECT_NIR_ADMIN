@@ -1,13 +1,14 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Card from '../../components/Dashboard/Card'
 import newUser from '../../assets/img/dashboard/new-user.svg'
 import TotalUser from '../../assets/img/dashboard/total-user.svg'
 import pendingUser from '../../assets/img/dashboard/pending-user.svg'
 import revenue from '../../assets/img/dashboard/revenue.svg'
 import styles from '../../assets/css/dashboard.module.css'
-import { Box, Grid } from '@mui/material'
+import { Autocomplete, Box, Button, Grid, MenuItem, Select, TextField } from '@mui/material'
 import { useQuery } from 'react-query'
 import { ResponsiveContainer, PieChart, Pie, Legend, BarChart, Bar, XAxis, YAxis, Tooltip, } from 'recharts';
+import { all } from 'axios'
 
 
 const DashboardPage = () => {
@@ -16,6 +17,15 @@ const DashboardPage = () => {
     setSelectedYear(e.target.value);
     // alert(e.target.value);
   }
+  const [type, setType] = React.useState('name');
+  const [userId, setUserId] = useState('');
+  const [searchUser, setSearchUser] = useState('');
+  const [message, setMessage] = useState('');
+  const [loadingNotification, setLoadingNotification] = useState(false);
+
+  const handleChangeType = (event) => {
+    setType(event.target.value);
+  };
 
   const { data: allUsers, loading, error } = useQuery('allUsers',
     () => fetch('http://localhost:5000/all-users', {
@@ -29,7 +39,28 @@ const DashboardPage = () => {
       .then(data => data.data)
   );
 
-  
+  let options = [];
+
+  if (allUsers && allUsers.length > 0) {
+    options = allUsers.map((option) => {
+      const firstLetter = option.email[0].toUpperCase();
+      return {
+        firstLetter: firstLetter,
+        ...option,
+      };
+    });
+  }
+
+  console.log(allUsers);
+
+  const handleInputChange = (event, value) => {
+    const selectedOption = options.find(option => type === 'name' ? option.name === value : option.email === value);
+    if (selectedOption) {
+      console.log(selectedOption);
+      setSearchUser(selectedOption.email);
+      setUserId(selectedOption._id);
+    }
+  };
 
   // get all subscribtion and revenue data
   const { data: allSubscribtion, loading: subscribtionLoading, error: subscribtionError } = useQuery('allSubscribtion',
@@ -44,7 +75,7 @@ const DashboardPage = () => {
       .then(data => data.data)
   );
 
-  console.log(allSubscribtion, subscribtionLoading, subscribtionError)
+  // console.log(allSubscribtion, subscribtionLoading, subscribtionError)
 
   // console.log(allUsers)
   if (loading) return 'Loading...';
@@ -128,8 +159,9 @@ const DashboardPage = () => {
   return (
     <Box sx={{ px: { xs: 1, md: 5 } }}>
       <CardParent />
-      <Grid container spacing={2}>
-        <Grid item xs={12} md={6} sx={{ height: 600, marginTop: '20px' }}>
+      {/* user visual chart & revenue generation chart*/}
+      <Grid container spacing={2} sx={{ mt: 1 }}>
+        <Grid item xs={12} md={6} sx={{ marginTop: '20px' }}>
           <div style={{ height: '400px', width: '100%', background: '#f9f9f9', padding: '20px', borderRadius: '10px' }}>
             <h3>User Visual Chart</h3>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: "10px" }}>
@@ -156,9 +188,9 @@ const DashboardPage = () => {
               {/* button for selecting year */}
               <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: "10px" }}>
                 <p>Year</p>
-                <select name="year" onChange={handleYearSelection}>
+                <select name="year" onChange={handleYearSelection} >
                   {
-                    [2023, 2022].map(year => <option value={year} >{year}</option>)
+                    [2023, 2022].map(year => <option index={year} value={year} >{year}</option>)
                   }
                 </select>
               </div>
@@ -167,7 +199,100 @@ const DashboardPage = () => {
           </div>
         </Grid>
       </Grid>
+      {/* system notification chart */}
+      <Grid container spacing={2} sx={{ mt: 4, fontFamily: 'Roboto', mb: 6 }}>
+        <h3 style={{
+          marginLeft: '20px',
+          borderLeft: '5px solid #0D55DF',
+          paddingLeft: '10px',
+        }}>
+          In App Notification
+        </h3>
+        <Grid item xs={12} md={12} sx={{
+          position: 'relative',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginBottom: '20px',
+        }}>
+          <Select
+            labelId="demo-select-small-label"
+            id="demo-select-small"
+            value={type}
+            onChange={handleChangeType}
+          >
+            <MenuItem value={'name'}>Name</MenuItem>
+            <MenuItem value={'email'}>Email</MenuItem>
+          </Select>
+          <Autocomplete
+            id="grouped-demo"
+            options={options?.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}
+            groupBy={(option) => option.firstLetter}
+            getOptionLabel={(option) => type === 'name' ? option.name : option.email}
+            onInputChange={handleInputChange}
+            // inputValue={searchUser}
+            sx={{
+              width: '88%', margin: '0 auto', background: '#fff', borderRadius: 1, outline: 'none',
+            }}
+            renderInput={(params) => <TextField {...params} placeholder='Search user' />}
+          />
+        </Grid>
+        <Grid item xs={12} md={12} sx={{ position: 'relative' }}>
+          <textarea
+            onChange={(e) => setMessage(e.target.value)}
+            style={{ width: '98%', height: '200px', minHeight: '100px', padding: '10px', borderRadius: '10px', border: '1px solid #ccc', outline: "none", fontSize: '16px' }}
+            placeholder="Write a message to user"
+          />
+          <Button
+            onClick={() => {
+              if (loadingNotification) return alert('Please wait')
+              if (!userId) return alert('Please select a user')
+              if (!message) return alert('Please write a message')
+              // setLoading true
+              setLoadingNotification(true)
+              // send notification to user
+              fetch('http://localhost:5000/create-notification', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `${localStorage.getItem('jwt')}`
+                },
+                body: JSON.stringify({
+                  data: {
+                    userId: userId,
+                    ownerId: localStorage.getItem('userId'),
+                    status: '',
+                    userRead: false,
+                    ownerRead: true,
+                    type: 'system',
+                    message: message
+                  }
+                })
+              })
+                .then(res => res.json())
+                .then(data => {
+                  if (data.error) {
+                    alert('Something went wrong')
+                  } else {
+                    alert('Notification sent successfully')
+                  }
+                })
+                .catch(err => console.log(err))
+                .finally(() => {
+                  setLoadingNotification(false)
+                  setMessage('')
+                })
 
+            }}
+            variant="contained"
+            sx={{ width: '150px', marginTop: '10px', background: '#0D55DF', color: '#fff', position: 'absolute', right: '40px', bottom: '20px' }}
+          >
+            {
+              loadingNotification ? 'Sending...' : 'Send'
+            }
+          </Button>
+        </Grid>
+      </Grid>
     </Box>
   )
 }
