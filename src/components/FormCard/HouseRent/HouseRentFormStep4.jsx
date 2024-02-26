@@ -22,7 +22,7 @@ const HouseRentFormStep4 = ({ formData, onSubmit }) => {
         }
 
         try {
-            const response = await axios.post('http://localhost:5000/upload', formData);
+            const response = await axios.post('https://nir-house-renting-service-65vv8.ondigitalocean.app/upload', formData);
             const { message, fileNames } = response.data;
 
             console.log(`File upload success: ${message}`);
@@ -111,6 +111,7 @@ const HouseRentFormStep4 = ({ formData, onSubmit }) => {
             .catch(error => {
                 console.error('Error making POST request:', error);
                 // Handle error as needed
+                
             });
     };
 

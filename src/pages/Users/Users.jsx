@@ -243,7 +243,7 @@ const Users = () => {
           {
             params.row.image ? <img
               style={{ height: 35, width: 35, borderRadius: '50%', marginRight: 10 }}
-              src={`http://localhost:5000/uploads/` + params.row.image}  // Access params.row.image instead of params.value.image
+              src={`https://nir-house-renting-service-65vv8.ondigitalocean.app/uploads/` + params.row.image}  // Access params.row.image instead of params.value.image
             // alt="user-image"
             /> :
               <img

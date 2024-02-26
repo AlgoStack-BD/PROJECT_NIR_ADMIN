@@ -163,7 +163,7 @@ const ProfileForm = ({ userId }) => {
   return (
     <Box className={styles.formParent} >
       <div className={styles.formImage}>
-        <img src={`http://localhost:5000/uploads/${data?.data?.image}`} alt="profile-image" style={{
+        <img src={`https://nir-house-renting-service-65vv8.ondigitalocean.app/uploads/${data?.data?.image}`} alt="profile-image" style={{
           width: '114px',
           height: '114px',
           borderRadius: '50%',

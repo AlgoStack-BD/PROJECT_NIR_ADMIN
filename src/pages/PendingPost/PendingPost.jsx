@@ -102,7 +102,7 @@ const PendingPost = () => {
             img && img.split(',').map((item, index) => {
               return (
                 <img src={
-                  item.startsWith('http') ? item : `http://localhost:5000/uploads/${item}`
+                  item.startsWith('http') ? item : `https://nir-house-renting-service-65vv8.ondigitalocean.app/uploads/${item}`
                 } alt="img"
                   key={index}
                   style={{ objectFit: 'contain', backgroundRepeat: 'no-repeat' ,  width: '300px', height: '300px', borderRadius: '10px' }}

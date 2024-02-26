@@ -13,12 +13,11 @@ const Process = () => {
             data: {
                 session_id: session_id,
                 user_id: '656f1d253449d567288c1a22',
-                post_id: '65bbc41bd3af76fdff783ac1',
+                post_id: '65d47efd1e61e6ec64beca7e',
             }
         });
         console.log(res.data)
         if (res?.data?.status === 200) {
-            await updatePost('65bbc41bd3af76fdff783ac1');
             navigate("/payment-success");
             return res.data;
         } else if (res?.data?.status === 403) {
