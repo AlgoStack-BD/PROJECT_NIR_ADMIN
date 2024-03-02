@@ -28,10 +28,12 @@ const DashboardPage = () => {
   };
 
   const { data: allUsers, loading, error } = useQuery('allUsers',
-    () => fetch('http://localhost:5000/all-users', {
+    () => fetch('https://nir-house-renting-service-65vv8.ondigitalocean.app/all-users', {
+      
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `${localStorage.getItem('jwt')}`
+
       }
     })
       .then(res => res.json())
@@ -64,7 +66,7 @@ const DashboardPage = () => {
 
   // get all subscribtion and revenue data
   const { data: allSubscribtion, loading: subscribtionLoading, error: subscribtionError } = useQuery('allSubscribtion',
-    () => fetch('http://localhost:5000/all-subscriptions', {
+    () => fetch('https://nir-house-renting-service-65vv8.ondigitalocean.app/all-subscriptions', {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `${localStorage.getItem('jwt')}`
@@ -251,7 +253,7 @@ const DashboardPage = () => {
               // setLoading true
               setLoadingNotification(true)
               // send notification to user
-              fetch('http://localhost:5000/create-notification', {
+              fetch('https://nir-house-renting-service-65vv8.ondigitalocean.app/create-notification', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',

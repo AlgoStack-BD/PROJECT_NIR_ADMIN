@@ -30,7 +30,7 @@ const Users = () => {
     console.log(selectedUser)
     // for each selected user call ban user api
     for (let i = 0; i < selectedRows.length; i++) {
-      const res = await axios.put(`http://localhost:5000/update-user/${selectedRows[i].id}`, {
+      const res = await axios.put(`https://nir-house-renting-service-65vv8.ondigitalocean.app/update-user/${selectedRows[i].id}`, {
         "data": { isBanned: true }
       }, {
         headers: {
@@ -50,7 +50,7 @@ const Users = () => {
     console.log(selectedUser)
     // for each selected user call ban user api
     for (let i = 0; i < selectedRows.length; i++) {
-      const res = await axios.put(`http://localhost:5000/update-user/${selectedRows[i].id}`, {
+      const res = await axios.put(`https://nir-house-renting-service-65vv8.ondigitalocean.app/update-user/${selectedRows[i].id}`, {
         "data": { isBanned: false }
       }, {
         headers: {
@@ -71,7 +71,7 @@ const Users = () => {
     console.log(selectedUser)
     // for each selected user call ban user api
     for (let i = 0; i < selectedRows.length; i++) {
-      const res = await axios.delete(`http://localhost:5000/delete-user/${selectedRows[i].id}`, {
+      const res = await axios.delete(`https://nir-house-renting-service-65vv8.ondigitalocean.app/delete-user/${selectedRows[i].id}`, {
         headers: {
           'Authorization': `${localStorage.getItem('jwt')}`
         }
@@ -120,7 +120,7 @@ const Users = () => {
 
     const handleSubmit = async () => {
       JSON.stringify(formData)
-      const res = await axios.put(`http://localhost:5000/update-user/${selectedUserId}`, {
+      const res = await axios.put(`https://nir-house-renting-service-65vv8.ondigitalocean.app/update-user/${selectedUserId}`, {
         "data": formData
       }, {
         headers: {
@@ -239,10 +239,10 @@ const Users = () => {
       headerName: 'User',
       width: 200,
       renderCell: (params) => (
-        <Tooltip title={params.row.user} style={{ display: 'flex', alignItems: 'center' }}>
+        <Tooltip title={params.row.image} style={{ display: 'flex', alignItems: 'center' }}>
           {
             params.row.image ? <img
-              style={{ height: 35, width: 35, borderRadius: '50%', marginRight: 10 }}
+              style={{ height: 35, width: 35, borderRadius: '50%', marginRight: 10, objectFit: 'cover' }}
               src={`https://nir-house-renting-service-65vv8.ondigitalocean.app/uploads/` + params.row.image}  // Access params.row.image instead of params.value.image
             // alt="user-image"
             /> :
@@ -447,7 +447,7 @@ const Users = () => {
 
 
   const fetchUsers = async () => {
-    const response = await fetch('http://localhost:5000/all-users', {
+    const response = await fetch('https://nir-house-renting-service-65vv8.ondigitalocean.app/all-users', {
       headers: {
         'Authorization': `${localStorage.getItem('jwt')}`
       }

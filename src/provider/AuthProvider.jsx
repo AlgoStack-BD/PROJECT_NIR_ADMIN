@@ -20,7 +20,7 @@ const AuthProvider = ({ children }) => {
 
     const fetchUserData = async (token, userId) => {
         try {
-            const response = await axios.get(`http://localhost:5000/single-user/${userId}`, {
+            const response = await axios.get(`https://nir-house-renting-service-65vv8.ondigitalocean.app/single-user/${userId}`, {
                 headers: {
                     Authorization: `${token}`,
                 },
@@ -38,7 +38,7 @@ const AuthProvider = ({ children }) => {
     const login = async (email, password) => {
         setLoading(true);
         try {
-            const response = await axios.post('http://localhost:5000/login', {
+            const response = await axios.post('https://nir-house-renting-service-65vv8.ondigitalocean.app/login', {
                 email,
                 password,
             });
@@ -63,7 +63,7 @@ const AuthProvider = ({ children }) => {
 
     const logout = () => {
         // invalidate token
-        fetch(`http://localhost:5000/logout?jwt=${token}`,)
+        fetch(`https://nir-house-renting-service-65vv8.ondigitalocean.app/logout?jwt=${token}`,)
             .then(res => res.json())
             .then(data => console.log(data))
         setUser(null);

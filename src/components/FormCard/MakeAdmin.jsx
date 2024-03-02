@@ -14,7 +14,7 @@ const MakeAdmin = () => {
     const [selectedValue, setSelectedValue] = useState('email');
 
     const { isLoading, error, data } = useQuery('allUsers', () =>
-        fetch('http://localhost:5000/all-users', {
+        fetch('https://nir-house-renting-service-65vv8.ondigitalocean.app/all-users', {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `${localStorage.getItem('jwt')}`
@@ -42,7 +42,7 @@ const MakeAdmin = () => {
             }
         };
 
-        axios.put(`http://localhost:5000/update-user/${selectedUserId}`, data, { headers })
+        axios.put(`https://nir-house-renting-service-65vv8.ondigitalocean.app/update-user/${selectedUserId}`, data, { headers })
             .then(response => {
                 if(response.data.status == 200){
                     alert('User is now an admin');

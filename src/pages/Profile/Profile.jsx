@@ -15,7 +15,7 @@ import { VerticalAlignBottom } from '@mui/icons-material'
 
 const Profile = () => {
   const [searchUser, setSearchUser] = useState('');
-  const [userId, setUserId] = useState('64d08e82e45e1b7fe0719f81');
+  const [userId, setUserId] = useState('65ddd372eab7270fb2c220aa');
   const [type, setType] = React.useState('name');
 
   const handleChangeType = (event) => {
@@ -23,7 +23,7 @@ const Profile = () => {
   };
 
   const { isLoading, error, data } = useQuery('allUsers', () =>
-    fetch('http://localhost:5000/all-users', {
+    fetch('https://nir-house-renting-service-65vv8.ondigitalocean.app/all-users', {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `${localStorage.getItem('jwt')}`
@@ -54,11 +54,7 @@ const Profile = () => {
   return (
     <Box>
       <Box sx={{ height: '30vh', zIndex: -1, background: `linear-gradient(180deg, #3E6EC9 0%, #0D55DF 100%)`, position: 'relative' }}>
-        {/* <img
-          style={{ position: 'absolute', right: 40, top: 20, cursor: 'pointer' }}
-          src={imageGrp}
-          alt="change-Image-icon"
-        /> */}
+       
       </Box>
       {/* search box */}
       <Select

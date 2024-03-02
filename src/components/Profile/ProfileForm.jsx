@@ -22,15 +22,15 @@ const ProfileForm = ({ userId }) => {
     myHeaders.append('Authorization', token);
     console.log(fileInput?.current.files[0])
     // check size and type here
-    if(fileInput?.current.files[0].size > 1024 * 1024 * 5) {  
+    if (fileInput?.current.files[0].size > 1024 * 1024 * 5) {
       console.log('Size too large!');
 
       return;
     }
-    if(fileInput?.current.files[0].type !== 'image/jpeg' && fileInput?.current.files[0].type !== 'image/png' && fileInput?.current.files[0].type !== 'image/jpg') {
+    if (fileInput?.current.files[0].type !== 'image/jpeg' && fileInput?.current.files[0].type !== 'image/png' && fileInput?.current.files[0].type !== 'image/jpg') {
       console.log('This type of file is not allowed!');
       return;
-    } 
+    }
     var formdata = new FormData();
     formdata.append("file", fileInput?.current.files[0], fileInput?.current.files[0].name);
 
@@ -44,7 +44,7 @@ const ProfileForm = ({ userId }) => {
       redirect: 'follow',
     };
 
-    fetch(`http://localhost:5000/update-user/${userId}`, requestOptions)
+    fetch(`https://nir-house-renting-service-65vv8.ondigitalocean.app/update-user/${userId}`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
         queryClient.invalidateQueries('singleUser');
@@ -79,7 +79,7 @@ const ProfileForm = ({ userId }) => {
 
   // console.log(userId)
   const { isLoading, error, data } = useQuery(['singleUser', userId], () =>
-    fetch(`http://localhost:5000/single-user/${userId}`, {
+    fetch(`https://nir-house-renting-service-65vv8.ondigitalocean.app/single-user/${userId}`, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `${localStorage.getItem('jwt')}`
@@ -102,11 +102,12 @@ const ProfileForm = ({ userId }) => {
     let copyData = text == 'Choose current location' ? (data?.data?.location == null ? 'Sylhet' : data?.data?.location) : (data?.data?.phone == null ? '01778287079' : data?.data?.phone)
     // if(data == null) copyData = ''
     return (
-      <div className={styles.locationAndLink} onClick={() => {
-        handleClick(SlideTransition)();
-        navigator.clipboard.writeText(copyData)
-        // alert('Copied' + ' ' + copyData)
-      }}>
+      <div className={styles.locationAndLink}
+        onClick={() => {
+          handleClick(SlideTransition)();
+          navigator.clipboard.writeText(copyData)
+          // alert('Copied' + ' ' + copyData)
+        }}>
         <p style={{ margin: '0 20px' }}>{text}</p>
         <div>
           {
@@ -142,7 +143,7 @@ const ProfileForm = ({ userId }) => {
   //   console.log(formData)
   //   try {
   //     const response = await axios.post(
-  //       `http://localhost:5000/update-user-image`,
+  //       `https://nir-house-renting-service-65vv8.ondigitalocean.app/update-user-image`,
   //       formData,
   //       {
   //         headers: {
@@ -190,10 +191,10 @@ const ProfileForm = ({ userId }) => {
       </div>
       <p variant="h5" className={styles.formTitle}>{data?.data?.name}</p>
       {/* total post for rent as owners */}
-      <MyFormData text="Rent request applied" amount={data?.data?.totoalPost} />
-      <MyFormData text="Total approved request" amount={data?.data?.rentSuccess} />
+      <MyFormData text="Rent request applied" amount={data?.data?.totoalPost ? data?.data?.totoalPost : 0} />
+      <MyFormData text="Total approved request" amount={data?.data?.rentSuccess ? data?.data?.rentSuccess : 0} />
       {/* pending = total post - rent success */}
-      <MyFormData text="Pending post" amount={parseInt(data?.data?.totoalPost) - parseInt(data?.data?.rentSuccess)} />
+      <MyFormData text="Pending post" amount={isNaN(parseInt(data?.data?.totoalPost) - parseInt(data?.data?.rentSuccess)) ? 0 : parseInt(data?.data?.totoalPost) - parseInt(data?.data?.rentSuccess)} />
 
       <hr style={{
         height: '40px',

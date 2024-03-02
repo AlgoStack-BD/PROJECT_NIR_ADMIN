@@ -9,7 +9,7 @@ const Process = () => {
 
     
     const saveTransaction = async () => {
-        const res = await axios.post("http://localhost:5000/make-payment", {
+        const res = await axios.post("https://nir-house-renting-service-65vv8.ondigitalocean.app/make-payment", {
             data: {
                 session_id: session_id,
                 user_id: '656f1d253449d567288c1a22',

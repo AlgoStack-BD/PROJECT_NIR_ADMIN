@@ -98,7 +98,7 @@ const HouseRentFormStep4 = ({ formData, onSubmit }) => {
             postData.data.isAds = false;
         }
         
-        axios.post('http://localhost:5000/create-post', postData, {
+        axios.post('https://nir-house-renting-service-65vv8.ondigitalocean.app/create-post', postData, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `${localStorage.getItem('jwt')}`

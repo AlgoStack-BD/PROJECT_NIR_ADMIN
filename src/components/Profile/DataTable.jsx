@@ -26,7 +26,7 @@ export default function DataTable({ userId }) {
         setPage(1); // Reset page
     };
     const { isLoading, error, data } = useQuery(['postByUserId', userId], () =>
-        fetch(`http://localhost:5000/single-post-by-userId/${userId}`, {
+        fetch(`https://nir-house-renting-service-65vv8.ondigitalocean.app/single-post-by-userId/${userId}`, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `${localStorage.getItem('jwt')}`
@@ -58,7 +58,7 @@ export default function DataTable({ userId }) {
     };
 
     const displayedData = data?.data?.slice((page - 1) * rows, page * rows);
-
+    console.log(displayedData)
     return (
         <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -72,7 +72,7 @@ export default function DataTable({ userId }) {
                     </TableRow>
                 </TableHead>
                 <TableBody sx={{ pe: 1 }}>
-                    {displayedData === 0 ? <TableRow><TableCell colSpan={5} align="center">NO POST FOUND</TableCell></TableRow> :
+                    {displayedData?.length === 0 ? <TableRow><TableCell colSpan={5} align="center">NO POST FOUND</TableCell></TableRow> :
                         // if data is not empty then map through data
                         displayedData?.map((row) => (
                             <TableRow
@@ -92,25 +92,29 @@ export default function DataTable({ userId }) {
                             </TableRow>
                         ))}
                 </TableBody>
-                <TableFooter>
-                    <TableRow>
-                        <TableCell colSpan={5} align="right" sx={{position: 'relative'}}>
-                            <Select
-                                value={rows}
-                                onChange={handleRowChange}
-                                sx={{ mr: 1, height: '40px', position: 'absolute', right: '40px', bottom: '15px' }}
+                {
+                    displayedData?.length !== 0 &&
+                    <TableFooter>
+                        <TableRow>
+                            <TableCell colSpan={5} align="right" sx={{ position: 'relative' }}>
+                                <Select
+                                    value={rows}
+                                    onChange={handleRowChange}
+                                    sx={{ mr: 1, height: '40px', position: 'absolute', right: '40px', bottom: '15px' }}
 
-                            >
-                                <MenuItem value={5} selected >Select row</MenuItem>
-                                <MenuItem value={5}>5</MenuItem>
-                                <MenuItem value={10}>10</MenuItem>
-                                <MenuItem value={20}>20</MenuItem>
-                                <MenuItem value={50}>50</MenuItem>
-                            </Select>
-                            <Pagination count={Math.ceil(data?.data?.length / rows)} page={page} onChange={handlePageChange} />
-                        </TableCell>
-                    </TableRow>
-                </TableFooter>
+                                >
+                                    <MenuItem value={5} selected >Select row</MenuItem>
+                                    <MenuItem value={5}>5</MenuItem>
+                                    <MenuItem value={10}>10</MenuItem>
+                                    <MenuItem value={20}>20</MenuItem>
+                                    <MenuItem value={50}>50</MenuItem>
+                                </Select>
+                                <Pagination count={Math.ceil(data?.data?.length / rows)} page={page} onChange={handlePageChange} />
+                            </TableCell>
+                        </TableRow>
+                    </TableFooter>
+                }
+
             </Table>
         </TableContainer>
     );

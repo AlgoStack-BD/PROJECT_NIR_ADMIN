@@ -52,7 +52,7 @@ export default function ProfileData({ userId }) {
         Transition: Fade,
     });
     const { isLoading, error, data } = useQuery(['singleUser', userId], () =>
-        fetch(`http://localhost:5000/single-user/${userId}`, {
+        fetch(`https://nir-house-renting-service-65vv8.ondigitalocean.app/single-user/${userId}`, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `${localStorage.getItem('jwt')}`
@@ -163,7 +163,7 @@ export default function ProfileData({ userId }) {
         // console.log('update')
         console.log(formData)
 
-        fetch(`http://localhost:5000/update-user/${userId}`, {
+        fetch(`https://nir-house-renting-service-65vv8.ondigitalocean.app/update-user/${userId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

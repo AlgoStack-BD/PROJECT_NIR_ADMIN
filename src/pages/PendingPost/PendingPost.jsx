@@ -105,7 +105,7 @@ const PendingPost = () => {
                   item.startsWith('http') ? item : `https://nir-house-renting-service-65vv8.ondigitalocean.app/uploads/${item}`
                 } alt="img"
                   key={index}
-                  style={{ objectFit: 'contain', backgroundRepeat: 'no-repeat' ,  width: '300px', height: '300px', borderRadius: '10px' }}
+                  style={{ objectFit: 'cover', backgroundRepeat: 'no-repeat' ,  width: '300px', height: '300px', borderRadius: '10px' }}
                 />
               )
             })
@@ -121,7 +121,7 @@ const PendingPost = () => {
   }
 
   const { isLoading: pendingPostLoading, error, data: pendingPosts } = useQuery('pendingPosts', () =>
-    fetch('http://localhost:5000/pending-posts', {
+    fetch('https://nir-house-renting-service-65vv8.ondigitalocean.app/pending-posts', {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `${localStorage.getItem('jwt')}`
@@ -137,7 +137,7 @@ const PendingPost = () => {
       }
     }
     JSON.stringify(data)
-    const res = await axios.put(`http://localhost:5000/update-post/${id}`, data, {
+    const res = await axios.put(`https://nir-house-renting-service-65vv8.ondigitalocean.app/update-post/${id}`, data, {
       headers: {
         'Authorization': `${localStorage.getItem('jwt')}`
       }
@@ -159,7 +159,7 @@ const PendingPost = () => {
       }
     }
     JSON.stringify(data)
-    const res = await axios.put(`http://localhost:5000/update-post/${id}`, data, {
+    const res = await axios.put(`https://nir-house-renting-service-65vv8.ondigitalocean.app/update-post/${id}`, data, {
       headers: {
         'Authorization': `${localStorage.getItem('jwt')}`
       }
@@ -172,7 +172,7 @@ const PendingPost = () => {
     }
     queryClient.invalidateQueries('pendingPosts')
   }
-
+  console.log(pendingPosts)
   // main return
   return (
     <div className={styles.container}>
